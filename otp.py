@@ -4,7 +4,7 @@ from email.message import EmailMessage
 
 # Email configuration
 email_sender = 'akankshamaloo0410@gmail.com'  # Your email address
-email_password = 'iacqhfxaoprxtnto'  # Your email password
+email_password = 'hh'  # Your email password
 email_receiver = 'riya.das.it24@heritageit.edu.in'  # Recipient's email address
 
 
