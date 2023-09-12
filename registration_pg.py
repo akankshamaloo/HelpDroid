@@ -13,12 +13,7 @@ from authentication import *
 
 
 class RegPage(App):
-    otp_sent=""
-    email = ''
-    otp = ''
-    password = ''
-    name = ''
-    mobile = ''
+
     def build(self):
         # Create the root layout as a RelativeLayout
         root_layout = RelativeLayout()
@@ -48,27 +43,27 @@ class RegPage(App):
 
         # Create otp input field
         otp_label = Label(text='Enter the OTP:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        otp_input = TextInput(hint_text='Enter your OTP', multiline=False, size_hint=(None, None), size=(200, 30))
+        self.otp_input = TextInput(hint_text='Enter your OTP', multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(otp_label)
-        layout.add_widget(otp_input)
+        layout.add_widget(self.otp_input)
 
         # Create password input field
         password_label = Label(text='Password:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        password_input = TextInput(hint_text='Enter your password', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
+        self.password_input = TextInput(hint_text='Enter your password', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(password_label)
-        layout.add_widget(password_input)
+        layout.add_widget(self.password_input)
 
         # Create name input field
         name_label = Label(text='Name:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        name_input = TextInput(hint_text='Enter your name', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
+        self.name_input = TextInput(hint_text='Enter your name', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(name_label)
-        layout.add_widget(name_input)
+        layout.add_widget(self.name_input)
 
         # Create mobile number input field
         mobile_label = Label(text='Mobile Number:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        mobile_input = TextInput(hint_text='Enter your Mobile Number', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
+        self.mobile_input = TextInput(hint_text='Enter your Mobile Number', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(mobile_label)
-        layout.add_widget(mobile_input)
+        layout.add_widget(self.mobile_input)
 
         # Create login button (smaller size)
         login_button = Button(text='Sign In', size_hint=(None, None), size=(100, 40))
@@ -107,9 +102,9 @@ class RegPage(App):
                     subprocess.run(["python", "otp.py"], check=True)
                 except subprocess.CalledProcessError as e:
                     print(f"Error running otp.py: {e}")'''
-                otp_sent=generate_otp()
+                self.otp_sent=generate_otp()
                 email=self.email_input.text
-                send_mail(email,otp_sent)
+                send_mail(email,self.otp_sent)
                 
                 
             elif platform == 'android':
@@ -122,16 +117,16 @@ class RegPage(App):
 
     def on_login_button_click(self, instance):
         # Implement the logic you want when the button is clicked
-        check=reg_auth(email_input.text,otp_input.text,password_input.text,name_input.text,mobile_input.text,otp_sent)
+        check=reg_auth(self.email_input.text,self.otp_input.text,self.password_input.text,self.name_input.text,self.mobile_input.text,self.otp_sent)
         if(check):
             print("signed in successful")
             #new page call
         else:
-            email_input.text = ''
-            otp_input.text = ''
-            password_input.text = ''
-            name_input.text = ''
-            mobile_input.text = ''
+            self.email_input.text = ''
+            self.otp_input.text = ''
+            self.password_input.text = ''
+            self.name_input.text = ''
+            self.mobile_input.text = ''
             print("signed in unsuccessful")
 
 if __name__ == '__main__':
