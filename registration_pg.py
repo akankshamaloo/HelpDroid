@@ -6,8 +6,19 @@ from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Color, Rectangle
+from kivy.utils import platform
+import subprocess
+from otp_generate import *
+from authentication import *
 
-class LoginPage(App):
+
+class RegPage(App):
+    otp_sent=""
+    email = ''
+    otp = ''
+    password = ''
+    name = ''
+    mobile = ''
     def build(self):
         # Create the root layout as a RelativeLayout
         root_layout = RelativeLayout()
@@ -25,12 +36,14 @@ class LoginPage(App):
 
         # Create email input field
         email_label = Label(text='Email:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        email_input = TextInput(hint_text='Enter your email', multiline=False, size_hint=(None, None), size=(200, 30))
+        self.email_input = TextInput(hint_text='Enter your email', multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(email_label)
-        layout.add_widget(email_input)
+        layout.add_widget(self.email_input)
+        
 
         # Create "Generate OTP" text link
         generate_otp_label = Label(text='Generate OTP', color=(0, 0, 1, 1), halign='left', valign='center', size_hint=(None, None), size=(150, 20))
+        generate_otp_label.bind(on_touch_down=self.generate_otp)
         layout.add_widget(generate_otp_label)
 
         # Create otp input field
@@ -63,6 +76,8 @@ class LoginPage(App):
 
         # Add space after the login button
         layout.add_widget(Label(size_hint=(None, None), height=15))
+        # Bind an event handler to the login button
+        login_button.bind(on_release=self.on_login_button_click)
 
         # Create "Login" text link
         login_with_otp_label = Label(text='Login instead', color=(0, 0, 1, 1), halign='left', valign='center', size_hint=(None, None), size=(150, 20))
@@ -79,5 +94,45 @@ class LoginPage(App):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
 
+    def generate_otp(self, instance, touch):
+        print("hello")
+        if instance.collide_point(*touch.pos):
+            # When the "Generate OTP" label is clicked, open otp_generator.py
+            print(platform)
+            if platform == 'win':
+                # Windows (or non-Android) behavior
+                '''import os
+                os.system('start otp.py')  # Opens the file using the default program
+                try:
+                    subprocess.run(["python", "otp.py"], check=True)
+                except subprocess.CalledProcessError as e:
+                    print(f"Error running otp.py: {e}")'''
+                otp_sent=generate_otp()
+                email=self.email_input.text
+                send_mail(email,otp_sent)
+                
+                
+            elif platform == 'android':
+                import android
+                android.open_file('otp.py')
+            else:
+                # Handle opening the file on other platforms
+                print("pass")
+                pass
+
+    def on_login_button_click(self, instance):
+        # Implement the logic you want when the button is clicked
+        check=reg_auth(email_input.text,otp_input.text,password_input.text,name_input.text,mobile_input.text,otp_sent)
+        if(check):
+            print("signed in successful")
+            #new page call
+        else:
+            email_input.text = ''
+            otp_input.text = ''
+            password_input.text = ''
+            name_input.text = ''
+            mobile_input.text = ''
+            print("signed in unsuccessful")
+
 if __name__ == '__main__':
-    LoginPage().run()
+    RegPage().run()
