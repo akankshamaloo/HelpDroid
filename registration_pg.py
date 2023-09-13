@@ -72,7 +72,7 @@ class RegPage(App):
         # Add space after the login button
         layout.add_widget(Label(size_hint=(None, None), height=15))
         # Bind an event handler to the login button
-        login_button.bind(on_release=self.on_login_button_click)
+        login_button.bind(on_release=self.on_registration_button_click)
 
         # Create "Login" text link
         login_with_otp_label = Label(text='Login instead', color=(0, 0, 1, 1), halign='left', valign='center', size_hint=(None, None), size=(150, 20))
@@ -115,7 +115,7 @@ class RegPage(App):
                 print("pass")
                 pass
 
-    def on_login_button_click(self, instance):
+    def on_registration_button_click(self, instance):
         # Implement the logic you want when the button is clicked
         check=reg_auth(self.email_input.text,self.otp_input.text,self.password_input.text,self.name_input.text,self.mobile_input.text,self.otp_sent)
         if(check):

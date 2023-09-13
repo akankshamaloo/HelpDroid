@@ -6,8 +6,9 @@ from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Color, Rectangle
-
-class LoginPage(App):
+from connection import *
+from sha256 import *
+class ForgotPasswordPage(App):
     def build(self):
         # Create the root layout as a RelativeLayout
         root_layout = RelativeLayout()
@@ -24,16 +25,22 @@ class LoginPage(App):
         root_layout.bind(size=self._update_rect, pos=self._update_rect)
 
         # Create email input field
-        email_label = Label(text='New Password:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        email_input = TextInput(hint_text='Enter new password', multiline=False, size_hint=(None, None), size=(200, 30))
+        email_label = Label(text='Email:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
+        self.email_input = TextInput(hint_text='Enter your email', multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(email_label)
-        layout.add_widget(email_input)
+        layout.add_widget(self.email_input)
+
+        # Create email input field
+        password_label = Label(text='New Password:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
+        self.password_input = TextInput(hint_text='Enter new password', multiline=False, size_hint=(None, None), size=(200, 30))
+        layout.add_widget(password_label)
+        layout.add_widget(self.password_input)
 
         # Create password input field
-        password_label = Label(text='Confirm Password:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        password_input = TextInput(hint_text='Confirm password', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
-        layout.add_widget(password_label)
-        layout.add_widget(password_input)
+        new_label = Label(text='Confirm Password:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
+        self.new_input = TextInput(hint_text='Confirm password', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
+        layout.add_widget(new_label)
+        layout.add_widget(self.new_input)
 
         # Create login button (smaller size)
         login_button = Button(text='Confirm', size_hint=(None, None), size=(100, 40))
@@ -42,7 +49,8 @@ class LoginPage(App):
         # Add space after the login button
         layout.add_widget(Label(size_hint=(None, None), height=20))
 
-        
+        # Bind an event handler to the login button
+        login_button.bind(on_release=self.on_forgot_button_click)
 
         # Add the main layout (BoxLayout) to the root layout (RelativeLayout)
         root_layout.add_widget(layout)
@@ -52,6 +60,17 @@ class LoginPage(App):
     def _update_rect(self, instance, value):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
+    
+    def on_forgot_button_click(self, instance):
+        #
+        if(self.new_input.text == self.password_input.text):
+            hash = sha256(self.password_input.text+""+self.email_input.text)    
+            update(self.email_input.text,hash,)
+            print('Password changed')
+        else:
+            print('Password does not match')
+            self.new_input=''
+            self.password_input=''
 
 if __name__ == '__main__':
-    LoginPage().run()
+    ForgotPasswordPage().run()

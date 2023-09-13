@@ -6,6 +6,8 @@ from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Color, Rectangle
+import os
+from authentication import *
 
 class LoginPage(App):
     def build(self):
@@ -25,15 +27,15 @@ class LoginPage(App):
 
         # Create email input field
         email_label = Label(text='Email:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        email_input = TextInput(hint_text='Enter your email', multiline=False, size_hint=(None, None), size=(200, 30))
+        self.email_input = TextInput(hint_text='Enter your email', multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(email_label)
-        layout.add_widget(email_input)
+        layout.add_widget(self.email_input)
 
         # Create password input field
         password_label = Label(text='Password:', halign='left', valign='center', size_hint=(None, None), size=(150, 30), color=(0, 0, 0, 1))
-        password_input = TextInput(hint_text='Enter your password', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
+        self.password_input = TextInput(hint_text='Enter your password', password=True, multiline=False, size_hint=(None, None), size=(200, 30))
         layout.add_widget(password_label)
-        layout.add_widget(password_input)
+        layout.add_widget(self.password_input)
 
         # Create login button (smaller size)
         login_button = Button(text='Login', size_hint=(None, None), size=(100, 40))
@@ -53,6 +55,13 @@ class LoginPage(App):
         login_with_otp_label = Label(text='Login with OTP', color=(0, 0, 1, 1), halign='left', valign='center', size_hint=(None, None), size=(150, 20))
         options_layout.add_widget(login_with_otp_label)
 
+        # Bind touch events to open the respective .py files
+        forgot_password_label.bind(on_touch_down=self.open_forgot_password)
+        login_with_otp_label.bind(on_touch_down=self.open_login_with_otp)
+        # Bind an event handler to the login button
+        login_button.bind(on_release=self.on_login_button_click)
+
+
         layout.add_widget(options_layout)
 
         # Add the main layout (BoxLayout) to the root layout (RelativeLayout)
@@ -63,6 +72,23 @@ class LoginPage(App):
     def _update_rect(self, instance, value):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
+    
+    def open_forgot_password(self, instance, touch):
+        if instance.collide_point(*touch.pos):
+            # Open the forgot_password.py file when "Forgot Password" is clicked
+            os.system('python forgot_pg.py')  # Modify the path as needed
+
+    def open_login_with_otp(self, instance, touch):
+        if instance.collide_point(*touch.pos):
+            # Open the login_with_otp.py file when "Login with OTP" is clicked
+            os.system('python loginotp_pg.py')  # Modify the path as needed
+    
+    def on_login_button_click(self, instance):
+        if(login_auth(self.email_input.text,self.password_input.text)):
+            print("Login Successful")
+        else:
+            print("Login declined")
+
 
 if __name__ == '__main__':
     LoginPage().run()
