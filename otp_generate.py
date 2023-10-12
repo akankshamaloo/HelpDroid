@@ -3,8 +3,8 @@ import ssl
 from email.message import EmailMessage
 
 # Email configuration
-email_sender = 'akankshamaloo0410@gmail.com'  # Your email address
-email_password = 'iacqhfxaoprxtnto'  # Your email password
+email_sender = 'teamhelpdroid@gmail.com'  # Your email address
+email_password = 'ayeadmrgdjpkxhod'  # Your email password
 email_receiver = 'riya.das.it24@heritageit.edu.in'  # Recipient's email address
 
 
