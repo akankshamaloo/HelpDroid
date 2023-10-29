@@ -1,0 +1,66 @@
+<CustomTopAppBar>:
+    MDTopAppBar:
+        title: "Welcome to Helpdroid"
+        elevation: 3
+        pos_hint: {"top": 1}
+        font_style: "H2"
+        specific_text_color: app.theme_cls.primary_color
+        md_bg_color: app.theme_cls.accent_color
+        right_action_items:
+            [
+            ["logout", lambda x: app.logout(), "", "Logout"],
+            ["account-edit-outline", lambda x: app.editdetails(), "" , "Edit details"],
+            ]
+<MenuHeader>
+    spacing: "12dp"
+    padding: "4dp"
+    adaptive_height: True
+MDScreen:
+    name: "welcome"
+    MDBottomNavigation:
+        selected_color_background: app.theme_cls.accent_color
+        text_color_active: app.theme_cls.primary_color
+
+        MDBottomNavigationItem:
+            name: 'doctor'
+            text: 'Doctor'
+            icon: 'doctor'
+            CustomTopAppBar:
+            MDLabel:
+                text: 'Doctor'
+                halign: 'center'
+             
+
+        MDBottomNavigationItem:
+            name: 'medication'
+            text: 'Medical Data'
+            icon: 'medication'
+            CustomTopAppBar:
+            MDRaisedButton:
+                text: "Upload Prescription"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                md_bg_color: app.theme_cls.primary_color
+                on_release: app.uploadmed()
+            MDRaisedButton:
+                id: button
+                text: "View Uploaded Prescription"
+                pos_hint: {"center_x": 0.5, "center_y": .4}
+                on_release: app.viewmed()
+        MDBottomNavigationItem:
+            name: 'arduino'
+            text: 'Arduino'
+            icon: 'heart-pulse'
+            CustomTopAppBar:
+            MDLabel:
+                text: 'Arduino'
+                halign: 'center'
+        MDBottomNavigationItem:
+            name: 'notification'
+            text: 'Notification'
+            icon: 'bell'
+            CustomTopAppBar:
+            MDLabel:
+                text: 'Notification'
+                halign: 'center'
+        
+    

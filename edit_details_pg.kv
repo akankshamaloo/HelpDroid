@@ -1,0 +1,65 @@
+MDScreen:
+    name: "editdetails"
+    MDFloatLayout:
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: { 'center_y': 0.95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            on_release: 
+                root.manager.transition.direction="right"
+                root.manager.current="welcome" 
+        MDLabel:
+            text: "Edit details!"
+            halign: 'center'
+            font_style: "H5"
+            size_hint_y: None
+            height: self.texture_size[1]
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            font_name: "Assets/Nunito/static/Nunito-Bold.ttf"  
+            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        MDTextField:
+            id: econtact
+            hint_text: "Enter Contacts"
+            helper_text: "Enter Contacts"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        MDTextField:
+            id: econtact
+            hint_text: "Enter Contacts"
+            helper_text: "Enter Contacts"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        MDTextField:
+            id: econtact
+            hint_text: "Enter Contacts"
+            helper_text: "Enter Contacts"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        MDTextField:
+            id: econtact
+            hint_text: "Enter Contacts"
+            helper_text: "Enter Contacts"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        
+        
+
+        MDRectangleFlatButton:
+            text: "Submit"
+            size_hint: None, None
+            size: dp(150), dp(50)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+            text_color: 0.070,0.16,0.30,1
+            md_bg_color: 0.74,1.12,1,1  # Background color in rgba format
+            ripple_behavior: "auto"

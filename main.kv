@@ -1,0 +1,48 @@
+MDScreen:
+    name: "main"
+    MDFloatLayout:
+        md_bg_color: 1,1,1,1
+        MDLabel:
+            text: "HelpDroid"
+            halign: 'center'
+            font_style: "H3"
+            size_hint_y: None
+            height: self.texture_size[1]
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            font_name: "Assets/Nunito/static/Nunito-Bold.ttf"  
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+        MDLabel:
+            text: "Welcome on board"
+            halign: 'center'
+            font_style: "H5"
+            size_hint_y: None
+            height: self.texture_size[1]
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            font_name: "Assets/Nunito/static/Nunito-Bold.ttf"  
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+        MDFlatButton:
+            text: "Login"
+            size_hint: .65,0.065
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            md_bg_color: 0.14,1.12,1,1  # Background color in rgba format
+            ripple_behavior: "auto"
+            on_release:
+                root.manager.transition.direction="left"
+                root.manager.current="login"
+
+        MDFlatButton:
+            text: "New User? Register here!!"
+            size_hint: .65,0.065
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            md_bg_color: 0.14,1.12,1,1  # Background color in rgba format
+            ripple_behavior: "auto"
+            on_release:
+                root.manager.transition.direction="left"
+                root.manager.current="register"
+        

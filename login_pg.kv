@@ -1,0 +1,78 @@
+MDScreen:
+    name: "login"
+    MDFloatLayout:
+
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: { 'center_y': 0.95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            on_release: 
+                root.manager.transition.direction="right"
+                root.manager.current="main" 
+        MDLabel:
+            text: "Login here!"
+            halign: 'center'
+            font_style: "H5"
+            size_hint_y: None
+            height: self.texture_size[1]
+            theme_text_color: "Custom"
+            text_color: 0.070,0.16,0.30,1
+            font_name: "Assets/Nunito/static/Nunito-Bold.ttf"  
+            pos_hint: {'center_x': 0.5, 'center_y': 0.8}  
+        MDTextField:
+            id: username
+            hint_text: "Username"
+            helper_text: "Enter your username"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+
+        MDTextField:
+            id: password
+            hint_text: "Password"
+            password: True
+            helper_text: "Enter your password"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+        MDRectangleFlatButton:
+            text: "Login"
+            size_hint: None, None
+            size: dp(150), dp(50)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            text_color: 0.070,0.16,0.30,1
+            md_bg_color: 0.74,1.12,1,1  # Background color in rgba format
+            ripple_behavior: "auto"
+            on_release: app.login()
+        
+
+        MDLabel:
+            text: "[ref=loginwithotp]Login with OTP[/ref]"
+            on_ref_press: 
+                root.manager.transition.direction="left"
+                root.manager.current="loginwithotp"
+            theme_text_color: "Secondary"
+            halign: "center"
+            markup: True
+            size_hint_y: None
+            height: dp(48)
+            pos_hint: {'center_x': 0.75, 'center_y': 0.3}
+
+        MDLabel:
+            text: "[ref=forgot_password]Forgot Password!![/ref]"
+            on_ref_press: 
+                root.manager.transition.direction="left"
+                root.manager.current = 'forgot_password'
+            theme_text_color: "Error"
+            halign: "center"
+            markup: True
+            size_hint_y: None
+            height: dp(48)
+            pos_hint: {'center_x': 0.3, 'center_y': 0.3}
+
+       
