@@ -5,13 +5,18 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivy.properties import ObjectProperty
 from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.filemanager import MDFileManager
+from kivy.core.window import Window
 from kivy.metrics import dp
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivymd.toast import toast
+import os
 from otp_generate import *
 from connection import *
 from authentication import *
+from triple_des import *
 
 Window.size = (310, 580)
 
@@ -115,6 +120,50 @@ class HelpDroid(MDApp):
         self.root.current="editdetails"
     def logout(self):
         self.root.current="login"
+    # def on_start(self):
+    #     self.file_manager = MDFileManager(
+    #         exit_manager=self.exit_manager,
+    #         select_path=self.select_path
+    #     )
+    #     Window.bind(on_keyboard=self.events)  
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Window.bind(on_keyboard=self.events)
+        self.manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager, select_path=self.select_path
+        ) 
+
+    def uploadmed(self):
+        self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
+        self.manager_open = True
+    def select_path(self, path: str):
+        '''
+        It will be called when you click on the file name
+        or the catalog selection button.
+
+        :param path: path to the selected directory or file;
+        '''
+
+        self.exit_manager()
+        toast(path)
+        encrypted(path)
+        print(path)
+
+    def exit_manager(self, *args):
+        '''Called when the user reaches the root of the directory tree.'''
+
+        self.manager_open = False
+        self.file_manager.close()
+
+    def events(self, instance, keyboard, keycode, text, modifiers):
+        '''Called when buttons are pressed on the mobile device.'''
+
+        if keyboard in (1001, 27):
+            if self.manager_open:
+                self.file_manager.back()
+        return True
+
 
 if __name__ == "__main__":
     HelpDroid().run()
