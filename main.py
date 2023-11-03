@@ -120,12 +120,12 @@ class HelpDroid(MDApp):
         self.root.current="editdetails"
     def logout(self):
         self.root.current="login"
-    # def on_start(self):
-    #     self.file_manager = MDFileManager(
-    #         exit_manager=self.exit_manager,
-    #         select_path=self.select_path
-    #     )
-    #     Window.bind(on_keyboard=self.events)  
+    def on_start(self):
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=self.select_path
+        )
+        Window.bind(on_keyboard=self.events)  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Window.bind(on_keyboard=self.events)
@@ -137,6 +137,7 @@ class HelpDroid(MDApp):
     def uploadmed(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
         self.manager_open = True
+
     def select_path(self, path: str):
         '''
         It will be called when you click on the file name
@@ -162,7 +163,11 @@ class HelpDroid(MDApp):
         if keyboard in (1001, 27):
             if self.manager_open:
                 self.file_manager.back()
-        return True
+        return 
+    
+    def viewmed(self):
+        self.root.current="viewmed"
+
 
 
 if __name__ == "__main__":

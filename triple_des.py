@@ -850,31 +850,28 @@ class triple_des(_baseDes):
 			data = self.__key2.crypt(data, ENCRYPT)
 			data = self.__key1.crypt(data, DECRYPT)
 		return self._unpadData(data, pad, padmode)
-
-
 def encrypted(file_path):
-	print("inside encrypted")
+	print("Encrypting Image...")
 	print(file_path)
+# file_path = input('File path: ')
 	with open(file_path, 'rb') as imagefile:
 				image=imagefile.read()
 	while len(image)%8!=0:
 				image+=b" "
+	data = "you enuiypt my data"
 	k = des("DEICRYPT", CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
 	# For Python3, you'll need to use bytes, i.e.:
 	#   data = b"Please encrypt my data"
 	#   k = des(b"DESCRYPT", CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
 	d = k.encrypt(image)
-	print('****************************************************')
 	print( "Encrypted: %r" % d)
-	print('****************************************************')
-	# dpath="encrypted_"+rindex('/','\\',file_path)+".jpg"
-	# with open(dpath, 'wb') as image_file:
-	# 	image_file.write(d)
-	# print("Encrypted Image Saved successfully as filename "+dpath)
+# dpath="encrypted_"+file_path
+# with open(dpath, 'wb') as image_file:
+#     image_file.write(d)
+# print("Encrypted Image Saved successfully as filename "+dpath)
 # d = k.decrypt(d)
 
 # print ("Decrypted: %r" % d)
 # with open(dpath, 'wb') as image_file:
 #     image_file.write(d)
 # # assert k.decrypt(d, padmode=PAD_PKCS5) == data
-encrypted('C:\\Users\\akank\\profile_pic.jpg')
