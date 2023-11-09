@@ -11,6 +11,7 @@ cmap = ListedColormap(['#FF0000','#00FF00','#0000FF'])
 score_df = pd.read_csv('patient_data.csv', header=0)
 for col in score_df.columns:
     if col != 'SCORE':
+        
         score_df[col] = pd.to_numeric(score_df[col])
     else:
         score_df[col] = score_df[col].astype('int')
