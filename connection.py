@@ -1,5 +1,9 @@
 import pymongo
 import sha256 as sha256
+import os
+import json
+import tempfile
+from triple_des import decrypted, encrypted
 # Replace with your MongoDB connection string
 mongo_uri = 'mongodb+srv://sonadas8april:riyadasdas@cluster0.x0jnn5h.mongodb.net/'
 
@@ -51,4 +55,59 @@ def loginotpcheck(email_input):
         print("Login Successful")
         return True
     return False
+
+
+def append_encrypted_image_to_prescription(path):
+    # Encrypt the image data
+
+    # Append the encrypted image to the prescription array of the document identified by the email
+    if os.path.exists('session.json'):
+        with open('session.json', 'r') as session_file:
+            session_data = json.load(session_file)
+            email = session_data.get('user_email')
+            encrypted_image = encrypted(path)
+
+            result = collection.update_one(
+                {"email": email},
+                {"$push": {"prescription_images": encrypted_image}}
+            )
+
+            # Check if the update was successful
+            if result.modified_count > 0:
+                print(f"Image appended to prescription for {email}")
+            else:
+                print(f"No document found with email {email} or no update was needed.")
+
+                
+def fetch_and_decrypt_prescription_images():
+    # Fetch the document for the given email
+
+    if os.path.exists('session.json'):
+        with open('session.json', 'r') as session_file:
+            session_data = json.load(session_file)
+            email = session_data.get('user_email')
+            document = collection.find_one({"email": email})
+
+            # Check if the document was found
+            if document:
+                encrypted_images = document.get("prescription_images", [])
+
+                decrypted_images = []
+                for encrypted_image in encrypted_images:
+                    image_bytes = decrypted(encrypted_image)  # Replace with your decryption method
+                    # Save the decrypted image to a temporary file
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_file:
+                        temp_file.write(image_bytes)
+                        temp_file_path = temp_file.name
+                    decrypted_images.append({
+                        "path": temp_file_path,
+                        "subtitle": "Decrypted Image"
+                    })
+                return decrypted_images
+            
+            
+            else:
+                print(f"No document found with email {email}")
+                return []
+ 
 

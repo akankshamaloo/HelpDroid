@@ -85,6 +85,8 @@ Note: This code was not written for high-end systems needing a fast
 """
 
 import sys
+import os
+import json
 
 # _pythonMajorVersion is used to handle Python2 and Python3 differences.
 _pythonMajorVersion = sys.version_info[0]
@@ -853,6 +855,7 @@ class triple_des(_baseDes):
 def encrypted(file_path):
 	print("Encrypting Image...")
 	print(file_path)
+
 # file_path = input('File path: ')
 	with open(file_path, 'rb') as imagefile:
 				image=imagefile.read()
@@ -865,12 +868,18 @@ def encrypted(file_path):
 	#   k = des(b"DESCRYPT", CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
 	d = k.encrypt(image)
 	print( "Encrypted: %r" % d)
+	return d
+
+
+
+def decrypted(d):
 # dpath="encrypted_"+file_path
 # with open(dpath, 'wb') as image_file:
 #     image_file.write(d)
 # print("Encrypted Image Saved successfully as filename "+dpath)
-# d = k.decrypt(d)
-
+	k = des("DEICRYPT", CBC, "\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
+	d = k.decrypt(d)
+	return d
 # print ("Decrypted: %r" % d)
 # with open(dpath, 'wb') as image_file:
 #     image_file.write(d)
