@@ -1,0 +1,24 @@
+MDScreen:
+    name: "viewmed"
+    MDFloatLayout:
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: { 'center_y': 0.95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: 0.070, 0.16, 0.30, 1
+            on_release: 
+                root.manager.transition.direction = "right"
+                root.manager.current = "welcome" 
+        MDLabel:
+            text: "View Prescription"
+            font_style: "H6"
+            size_hint_y: None
+            height: self.texture_size[1]
+            theme_text_color: "Custom"
+            text_color: 0.070, 0.16, 0.30, 1
+            font_name: "Assets/Nunito/static/Nunito-Bold.ttf"  
+            pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        MDSwiper:
+            id: swiperitems
+            

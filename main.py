@@ -4,13 +4,26 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.properties import ObjectProperty
 from kivymd.uix.scrollview import MDScrollView
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.filemanager import MDFileManager
 from kivy.core.window import Window
 from kivy.metrics import dp
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivymd.uix.swiper import MDSwiper, MDSwiperItem
+from kivymd.uix.card import MDCard
+from kivymd.uix.label import MDLabel
+from kivy.uix.image import Image as KivyImage
+from kivy.uix.scatter import Scatter
+from kivy.uix.behaviors import ButtonBehavior
+from kivymd.uix.button import MDIconButton
+from kivy.uix.label import Label
+from kivymd.uix.floatlayout import MDFloatLayout
+
+from kivy.uix.popup import Popup
+from kivy.uix.image import Image as KivyImage
+from kivymd.uix.fitimage import FitImage
+from PIL import Image
 from kivymd.toast import toast
 import os
 from otp_generate import *
@@ -18,7 +31,12 @@ from connection import *
 from authentication import *
 from triple_des import *
 
+
+
 Window.size = (310, 580)
+
+class ClickableImage(ButtonBehavior, FitImage):
+    pass
 
 class CustomTopAppBar(MDScreen):
     pass
@@ -35,13 +53,13 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("forgot_pg.kv"))
         screen_manager.add_widget(Builder.load_file("welcome.kv"))
         screen_manager.add_widget(Builder.load_file("edit_details_pg.kv"))
+        screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.accent_palette = "Gray"
         self.theme_cls.primary_hue = "900"
         return screen_manager
-    def viewmed(self):
-        self.root.current="viewmed"
+    
     def generateR(self):
         self.temp_otp =  generate_otp()
         email = self.root.get_screen("registration").ids.Email.text
@@ -137,7 +155,7 @@ class HelpDroid(MDApp):
     def uploadmed(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
         self.manager_open = True
-
+        
     def select_path(self, path: str):
         '''
         It will be called when you click on the file name
@@ -163,10 +181,52 @@ class HelpDroid(MDApp):
         if keyboard in (1001, 27):
             if self.manager_open:
                 self.file_manager.back()
-        return 
+        return True
+    # Running the app
     
+
+    
+
+
     def viewmed(self):
-        self.root.current="viewmed"
+        image_data = [
+            {"path": "img1.jpeg", "subtitle": "Image 1"},
+            {"path": "img2.jpeg", "subtitle": "Image 2"},
+            {"path": "img3.jpeg", "subtitle": "Image 3 Subtitle"}
+        ]
+
+        my_screen = self.root.get_screen("viewmed")
+        my_screen.ids.swiperitems.remove_widget()
+        for data in image_data:
+            my_screen.ids.swiperitems.add_widget(
+                MDSwiperItem(
+                    MDCard(
+                        ClickableImage(
+                            source=data["path"],
+                            size_hint=(1, 0.8),
+                            radius=(10, 10, 0, 0),
+                            on_release=lambda x, path=data["path"]: self.viewImage(path,data["subtitle"]),
+                        ),
+                        MDLabel(
+                            text=data["subtitle"],
+                            halign="center",
+                            size_hint_y= None,  # add this line
+                        ),
+                        orientation='vertical',
+                        size_hint=(0.8, 0.8),
+                    )
+                )
+            )
+
+        self.root.current = "viewmed"
+
+    def viewImage(self, path, subtitle):
+        
+        image = KivyImage(source=path, size_hint=(1, 1), allow_stretch=True, keep_ratio=True)
+        popup = Popup(title=subtitle, content=image, size_hint=(1, .8))
+        popup.open()
+
+    
 
 
 
