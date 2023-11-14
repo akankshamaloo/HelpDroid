@@ -34,7 +34,7 @@ from triple_des import *
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
 from knn_predict import *
-from kivymd.uix.dialog import MDDialog
+from otp_generate import *
 
 
 Window.size = (310, 580)
@@ -271,13 +271,15 @@ class HelpDroid(MDApp):
     def get_contact(self, contact):
         self.check_heath(4)
         print(contact)
-        pattern = re.compile(r"^\+?[0-9]{10,15}$")
+        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
         
-        if(pattern.match(contact)):
-            insert_contact("user",contact)
-            print("Contact number:", contact)  # You can replace this with any action you want
-            toast("Contact number added successfully")
-            self.root.get_screen("editdetails").ids.econtact.text = ''
+        if(email_pattern.match(contact)):
+            if(insert_contact("user",contact)):
+                print("Contact number:", contact)  # You can replace this with any action you want
+                toast("Contact number added successfully")
+                self.root.get_screen("editdetails").ids.econtact.text = ''
+            else:
+                toast("Error occured while inserting")
         else:
             toast("Invalid contact number")
     def send_message(self,contact_info):
@@ -287,35 +289,20 @@ class HelpDroid(MDApp):
         
         print(contact_info)
         pass
-    dialog = None
-    def check_heath(self):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                text="Discard draft?",
-                buttons=[
-                    MDFlatButton(
-                        text="Close",
-                        theme_text_color="Custom",
-                        text_color=self.theme_cls.primary_color,
-                        on_release=lambda x: self.dialog.dismiss(),
-                    ),
-                    
-                ],
-            )
-        self.dialog.open()
+    def check_heath(self,score):
         print("Health checked")
         # score = get_score()
-        # print(score)
-        # if(score == 0):
-        #     toast("You are healthy")
-        # elif(score==1):
-        #     toast("Please take care of your health, You have mild health issues")
-        # elif(score == 2):
-        #     toast("Please take care of your health, You have moderate health issues")
-        # else:
-        #     contacts= fetch_contacts()
-        #     for contact in contacts:
-        #         self.send_message(contact)
+        print(score)
+        if(score == 0):
+            toast("You are healthy")
+        elif(score==1):
+            toast("Please take care of your health, You have mild health issues")
+        elif(score == 2):
+            toast("Please take care of your health, You have moderate health issues")
+        else:
+            contacts= fetch_contacts()
+            for contact in contacts:
+                self.send_message(contact)
                 
         
 
