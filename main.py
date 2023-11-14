@@ -1,3 +1,6 @@
+from kivy.config import Config
+Config.set('graphics', 'width', '310')
+Config.set('graphics', 'height', '580')
 from kivy.core.text import LabelBase
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import MDScreen
@@ -35,13 +38,15 @@ from kivy.core.image import Image as CoreImage
 from io import BytesIO
 from knn_predict import *
 from otp_generate import *
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.pickers import MDTimePicker
+from kivy.clock import Clock
 
 
 Window.size = (310, 580)
 
 class ClickableImage(ButtonBehavior, FitImage):
     pass
-
 class CustomTopAppBar(MDScreen):
     pass
 class ClickableImage(ButtonBehavior, FitImage):
@@ -60,6 +65,8 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("welcome.kv"))
         screen_manager.add_widget(Builder.load_file("edit_details_pg.kv"))
         screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
+        screen_manager.add_widget(Builder.load_file("editcontacts.kv"))
+        screen_manager.add_widget(Builder.load_file("editmed.kv")) 
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.accent_palette = "Gray"
@@ -68,18 +75,17 @@ class HelpDroid(MDApp):
     
     def generateR(self):
         self.temp_otp =  generate_otp()
-        email = self.root.get_screen("register").ids.Email.text
-       
+        email = self.root.get_screen("register").ids.Email.text      
         send_mail(email,self.temp_otp)
+        
     def generateF(self):
         self.temp_otp =  generate_otp()
         email = self.root.get_screen("forgot_password").ids.Email.text
-       
         send_mail(email,self.temp_otp)
+
     def generateO(self):
         self.temp_otp =  generate_otp()
-        email = self.root.get_screen("loginwithotp").ids.Email.text
-       
+        email = self.root.get_screen("loginwithotp").ids.Email.text       
         send_mail(email,self.temp_otp)
     
     def register(self):
@@ -101,10 +107,10 @@ class HelpDroid(MDApp):
             self.root.get_screen("register").ids.MobileNo.text = ''
             self.root.get_screen("register").ids.OTP.text = ''
             print("signed in unsuccessful")
+
     def login(self):
         email = self.root.get_screen("login").ids.username.text
         password = self.root.get_screen("login").ids.password.text
-
         if(login_auth(email,password)):
             print("Login Successful")
             #session management
@@ -114,6 +120,7 @@ class HelpDroid(MDApp):
             self.root.current="welcome"
         else:
             print("Login declined")
+
     def login_with_otp(self):
         email = self.root.get_screen("loginwithotp").ids.Email.text
         otp = self.root.get_screen("loginwithotp").ids.OTP.text
@@ -128,11 +135,11 @@ class HelpDroid(MDApp):
                 self.root.get_screen("loginwithotp").ids.Email.text = ''
                 self.root.get_screen("loginwithotp").ids.OTP.text = ''
                 print("Login Failed")
-            #
         else:
             self.root.get_screen("loginwithotp").ids.Email.text = ''
             self.root.get_screen("loginwithotp").ids.OTP.text = ''
             print("otp wrong")
+
     def forgot_password(self):
         email = self.root.get_screen("forgot_password").ids.Email.text
         otp = self.root.get_screen("forgot_password").ids.OTP.text
@@ -147,12 +154,28 @@ class HelpDroid(MDApp):
             self.root.get_screen("forgot_password").ids.password.text = ''
             self.root.get_screen("forgot_password").ids.Email.text = ''
             print("otp wrong")
+
     def editdetails(self):
         self.root.current="editdetails"
-        
+
+    def show_time_picker(self):
+        time_dialog = MDTimePicker()
+        time_dialog.bind(time=self.get_time)
+        time_dialog.open()
+        self.root.get_screen("editmed").ids.time_label.text = f"{time_dialog.hour}:{time_dialog.minute}"
+
+    def get_time(self, instance, time):
+        '''
+        The method returns the set time.
+        :type instance: <kivymd.uix.picker.MDTimePicker object>
+        :type time: <class 'datetime.time'>
+        '''
+        return time
+
     def logout(self):
         self.root.current="login"
         self.clear_session()
+
     def save_session(self, email):
         session_data = {
             'user_email': email
@@ -163,6 +186,7 @@ class HelpDroid(MDApp):
     def clear_session(self):
         if os.path.exists('session.json'):
             os.remove('session.json')
+
     def on_start(self):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
@@ -170,6 +194,7 @@ class HelpDroid(MDApp):
         )
         Window.bind(on_keyboard=self.events)  
         self.load_session()
+
     def load_session(self):
         if os.path.exists('session.json'):
             with open('session.json', 'r') as session_file:
@@ -197,21 +222,15 @@ class HelpDroid(MDApp):
         '''
         It will be called when you click on the file name
         or the catalog selection button.
-
         :param path: path to the selected directory or file;
         '''
-        
         self.exit_manager()
-
         # Get the size of the file in kilobytes (KB)
         file_size_kb = os.path.getsize(path) / 1024
-
         # Check if the file size is less than or equal to 300 KB
         if file_size_kb <= 300:
-            toast(f"File selected: {path}")
-            
+            toast(f"File selected: {path}")            
             append_encrypted_image_to_prescription(path)  # Call the encryption function
-
             print(f"File path: {path} (Size: {file_size_kb:.2f} KB)")
         else:
             # File is too large, notify the user
@@ -220,20 +239,18 @@ class HelpDroid(MDApp):
 
     def exit_manager(self, *args):
         '''Called when the user reaches the root of the directory tree.'''
-
         self.manager_open = False
         self.file_manager.close()
 
     def events(self, instance, keyboard, keycode, text, modifiers):
         '''Called when buttons are pressed on the mobile device.'''
-
         if keyboard in (1001, 27):
             if self.manager_open:
                 self.file_manager.back()
         return 
+    
     flag=0
-    def viewmed(self):
-       
+    def viewmed(self):       
         if(self.flag==0):
             self.flag=1
             image_data = fetch_and_decrypt_prescription_images()
@@ -258,12 +275,10 @@ class HelpDroid(MDApp):
                             size_hint=(0.8, 0.8),
                         )
                     )
-                )
-        
+                )    
         self.root.current = "viewmed"
 
-    def viewImage(self, path, subtitle):
-        
+    def viewImage(self, path, subtitle):       
         image = KivyImage(source=path, size_hint=(1, 1), allow_stretch=True, keep_ratio=True)
         popup = Popup(title=subtitle, content=image, size_hint=(1, .8))
         popup.open()
@@ -271,8 +286,7 @@ class HelpDroid(MDApp):
     def get_contact(self, contact):
         self.check_heath(4)
         print(contact)
-        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-        
+        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")        
         if(email_pattern.match(contact)):
             if(insert_contact("user",contact)):
                 print("Contact number:", contact)  # You can replace this with any action you want
@@ -282,9 +296,24 @@ class HelpDroid(MDApp):
                 toast("Error occured while inserting")
         else:
             toast("Invalid email ")
-   
+
+    dialog = None
     def check_heath(self,score):
         print("Health checked")
+        print("Health checked")
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text="Discard draft?",
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog.dismiss(),
+                    ),
+                ],
+            )
+        self.dialog.open()
         # score = get_score()
         print(score)
         if(score == 0):
@@ -303,10 +332,6 @@ class HelpDroid(MDApp):
                     send_mail(contact.get("email"),message,"Emergency from HelpDroid")
                     toast("Please take care of your health, You have severe health issues, Informed your contacts")
 
-                
-        
-
-            
 
 
 if __name__ == "__main__":

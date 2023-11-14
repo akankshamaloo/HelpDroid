@@ -1,5 +1,5 @@
 MDScreen:
-    name: "editmed"
+    name: "editcontacts"
     MDFloatLayout:
         MDIconButton:
             icon: "arrow-left"
@@ -11,7 +11,7 @@ MDScreen:
                 root.manager.transition.direction="right"
                 root.manager.current="editdetails"
         MDLabel:
-            text: "Edit Medications!"
+            text: "Edit Contacts!"
             halign: 'center'
             font_style: "H5"
             size_hint_y: None
@@ -21,25 +21,22 @@ MDScreen:
             font_name: "Assets/Nunito/static/Nunito-Bold.ttf"  
             pos_hint: {'center_x': 0.5, 'center_y': 0.9}
         MDTextField:
-            id: medname
-            hint_text: "Enter Medicine"
-            helper_text: "Name of Medecine"
+            id: econtact
+            hint_text: "Enter Email"
+            helper_text: "Enter E-mail"
             helper_text_mode: "on_focus"
             size_hint_x: None
             width: dp(250)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+      
         MDTextField:
-            id: time_label
-            font_size: "24sp"
-            halign: "center"
-            readonly: True
-            input_filter: "int"
-            size_hint_y: None
-            height: dp(48)
-        MDRaisedButton:
-            text: "Add Time"
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            on_release: app.show_time_picker()
+            id: Name
+            hint_text: "Name"
+            helper_text: "Enter Your Name"
+            helper_text_mode: "on_focus"
+            size_hint_x: None
+            width: dp(250)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
         
         MDRectangleFlatButton:
             text: "Submit"
