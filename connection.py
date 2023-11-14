@@ -172,3 +172,23 @@ def fetch_contacts():
     except Exception as e:
         print(f"Error: {e}")
         return []
+def user_details():
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    try:
+        # Fetch the user document
+        user_document = collection.find_one({"email": email})
+
+        # Check if the document was found
+        if user_document:
+            return user_document
+        else:
+            print(f"No document found with email {email}")
+            return []
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return []

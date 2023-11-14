@@ -14,10 +14,10 @@ def generate_otp():
     import random
     return str(random.randint(1000, 9999))
 
-def send_mail(email_receiver,otp):
+def send_mail(email_receiver,message,sub="Your OTP for HelpDroid"):
     # Set the subject and body of the email
-    subject = 'your OTP'
-    body = otp
+    subject = sub
+    body = message
 
     em = EmailMessage()
     em['From'] = email_sender

@@ -275,12 +275,12 @@ class HelpDroid(MDApp):
         if(email_pattern.match(contact)):
             if(insert_contact("user",contact)):
                 print("Contact number:", contact)  # You can replace this with any action you want
-                toast("Contact number added successfully")
+                toast("Contact  added successfully")
                 self.root.get_screen("editdetails").ids.econtact.text = ''
             else:
                 toast("Error occured while inserting")
         else:
-            toast("Invalid contact number")
+            toast("Invalid email ")
    
     def check_heath(self,score):
         print("Health checked")
@@ -293,9 +293,15 @@ class HelpDroid(MDApp):
         elif(score == 2):
             toast("Please take care of your health, You have moderate health issues")
         else:
-            contacts= fetch_contacts()
-            for contact in contacts:
-                send_mail(contact.email,"Your closed one  have a medical emergency please check on them")
+            deatails= user_details()
+            for contact in deatails.get("contacts", []):
+                if contact.get("email"):
+                    print(contact.get("email"))
+                    message="Your closed one  have a medical emergency please check .\nUser Details:\n Name:"+(deatails.get("name"))+"\n Mobile "+(deatails.get("mobile"))+"\n Email:"+(deatails.get("email"))
+                    print(message)
+                    send_mail(contact.get("email"),message,"Emergency from HelpDroid")
+                    toast("Please take care of your health, You have severe health issues, Informed your contacts")
+
                 
         
 
