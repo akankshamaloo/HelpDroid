@@ -63,7 +63,7 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("registration_pg.kv"))
         screen_manager.add_widget(Builder.load_file("forgot_pg.kv"))
         screen_manager.add_widget(Builder.load_file("welcome.kv"))
-        screen_manager.add_widget(Builder.load_file("edit_details_pg.kv"))
+        screen_manager.add_widget(Builder.load_file("editdetails.kv"))
         screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
         screen_manager.add_widget(Builder.load_file("editcontacts.kv"))
         screen_manager.add_widget(Builder.load_file("editmed.kv")) 
