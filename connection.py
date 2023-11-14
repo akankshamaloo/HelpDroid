@@ -109,5 +109,62 @@ def fetch_and_decrypt_prescription_images():
             else:
                 print(f"No document found with email {email}")
                 return []
+
  
 
+def read_email_from_session():
+    with open('session.json', 'r') as file:
+        session_data = json.load(file)
+        return session_data.get('user_email', None)
+
+def insert_contact(name='user', phone=None):
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    if phone is None:
+        print("Phone number is required.")
+        return
+
+    contact_data = {"name": name, "phone": phone}
+
+    try:
+        # Update the existing user document to add the contact
+        update_result = collection.update_one(
+            {"email": email},
+            {"$push": {"contacts": contact_data}},
+            upsert=False
+        )
+        
+        if update_result.matched_count == 0:
+            print("No user found with the provided email.")
+        elif update_result.modified_count > 0:
+            print("Contact inserted successfully.")
+        else:
+            print("No update was made, possibly because the contact already exists.")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+def fetch_contacts():
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    try:
+        # Fetch the user document
+        user_document = collection.find_one({"email": email})
+
+        # Check if the document was found
+        if user_document:
+            contacts = user_document.get("contacts", [])
+            return contacts
+        else:
+            print(f"No document found with email {email}")
+            return []
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return []

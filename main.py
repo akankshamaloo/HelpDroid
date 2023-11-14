@@ -7,6 +7,7 @@ from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.filemanager import MDFileManager
 from kivy.core.window import Window
 from kivy.metrics import dp
+import re
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -16,7 +17,7 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.image import Image as KivyImage
 from kivy.uix.scatter import Scatter
 from kivy.uix.behaviors import ButtonBehavior
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.button import MDFlatButton
 from kivy.uix.label import Label
 from kivymd.uix.floatlayout import MDFloatLayout
 import json
@@ -32,14 +33,21 @@ from authentication import *
 from triple_des import *
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
+from knn_predict import *
+from kivymd.uix.dialog import MDDialog
+
 
 Window.size = (310, 580)
+
+class ClickableImage(ButtonBehavior, FitImage):
+    pass
 
 class CustomTopAppBar(MDScreen):
     pass
 class ClickableImage(ButtonBehavior, FitImage):
     pass
 class HelpDroid(MDApp):
+    
     def build(self):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.theme_style = "Dark"
@@ -57,8 +65,7 @@ class HelpDroid(MDApp):
         self.theme_cls.accent_palette = "Gray"
         self.theme_cls.primary_hue = "900"
         return screen_manager
-    def viewmed(self):
-        self.root.current="viewmed"
+    
     def generateR(self):
         self.temp_otp =  generate_otp()
         email = self.root.get_screen("register").ids.Email.text
@@ -185,7 +192,7 @@ class HelpDroid(MDApp):
     def uploadmed(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
         self.manager_open = True
-
+        
     def select_path(self, path: str):
         '''
         It will be called when you click on the file name
@@ -261,7 +268,59 @@ class HelpDroid(MDApp):
         popup = Popup(title=subtitle, content=image, size_hint=(1, .8))
         popup.open()
 
-    
+    def get_contact(self, contact):
+        self.check_heath(4)
+        print(contact)
+        pattern = re.compile(r"^\+?[0-9]{10,15}$")
+        
+        if(pattern.match(contact)):
+            insert_contact("user",contact)
+            print("Contact number:", contact)  # You can replace this with any action you want
+            toast("Contact number added successfully")
+            self.root.get_screen("editdetails").ids.econtact.text = ''
+        else:
+            toast("Invalid contact number")
+    def send_message(self,contact_info):
+        phoneNumber = contact_info["phone"]
+        name=contact_info["name"]
+        message = "Hi "+name+" I am in serious health issue please help me"
+        
+        print(contact_info)
+        pass
+    dialog = None
+    def check_heath(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text="Discard draft?",
+                buttons=[
+                    MDFlatButton(
+                        text="Close",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog.dismiss(),
+                    ),
+                    
+                ],
+            )
+        self.dialog.open()
+        print("Health checked")
+        # score = get_score()
+        # print(score)
+        # if(score == 0):
+        #     toast("You are healthy")
+        # elif(score==1):
+        #     toast("Please take care of your health, You have mild health issues")
+        # elif(score == 2):
+        #     toast("Please take care of your health, You have moderate health issues")
+        # else:
+        #     contacts= fetch_contacts()
+        #     for contact in contacts:
+        #         self.send_message(contact)
+                
+        
+
+            
+
 
 if __name__ == "__main__":
     HelpDroid().run()
