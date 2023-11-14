@@ -34,6 +34,7 @@ from triple_des import *
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
 from knn_predict import *
+from otp_generate import *
 
 
 Window.size = (310, 580)
@@ -269,22 +270,18 @@ class HelpDroid(MDApp):
     def get_contact(self, contact):
         self.check_heath(4)
         print(contact)
-        pattern = re.compile(r"^\+?[0-9]{10,15}$")
+        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
         
-        if(pattern.match(contact)):
-            insert_contact("user",contact)
-            print("Contact number:", contact)  # You can replace this with any action you want
-            toast("Contact number added successfully")
-            self.root.get_screen("editdetails").ids.econtact.text = ''
+        if(email_pattern.match(contact)):
+            if(insert_contact("user",contact)):
+                print("Contact number:", contact)  # You can replace this with any action you want
+                toast("Contact number added successfully")
+                self.root.get_screen("editdetails").ids.econtact.text = ''
+            else:
+                toast("Error occured while inserting")
         else:
             toast("Invalid contact number")
-    def send_message(self,contact_info):
-        phoneNumber = contact_info["phone"]
-        name=contact_info["name"]
-        message = "Hi "+name+" I am in serious health issue please help me"
-        
-        print(contact_info)
-        pass
+   
     def check_heath(self,score):
         print("Health checked")
         # score = get_score()
@@ -298,7 +295,7 @@ class HelpDroid(MDApp):
         else:
             contacts= fetch_contacts()
             for contact in contacts:
-                self.send_message(contact)
+                send_mail(contact.email,"Your closed one  have a medical emergency please check on them")
                 
         
 

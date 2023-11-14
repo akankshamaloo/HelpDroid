@@ -117,17 +117,17 @@ def read_email_from_session():
         session_data = json.load(file)
         return session_data.get('user_email', None)
 
-def insert_contact(name='user', phone=None):
+def insert_contact(name='user', email1=None):
     email = read_email_from_session()
     if not email:
         print("No email found in session.")
         return
 
-    if phone is None:
-        print("Phone number is required.")
+    if email1 is None:
+        print("Email is required.")
         return
 
-    contact_data = {"name": name, "phone": phone}
+    contact_data = {"name": name, "email": email1}
 
     try:
         # Update the existing user document to add the contact
@@ -139,13 +139,17 @@ def insert_contact(name='user', phone=None):
         
         if update_result.matched_count == 0:
             print("No user found with the provided email.")
+            return False
         elif update_result.modified_count > 0:
             print("Contact inserted successfully.")
+            return True
         else:
             print("No update was made, possibly because the contact already exists.")
+            return False
 
     except Exception as e:
         print(f"Error: {e}")
+        return False
 
 def fetch_contacts():
     email = read_email_from_session()
