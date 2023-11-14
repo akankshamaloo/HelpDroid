@@ -7,6 +7,7 @@ from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.filemanager import MDFileManager
 from kivy.core.window import Window
 from kivy.metrics import dp
+import re
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -32,6 +33,8 @@ from authentication import *
 from triple_des import *
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
+from knn_predict import *
+
 
 Window.size = (310, 580)
 
@@ -263,7 +266,44 @@ class HelpDroid(MDApp):
         popup = Popup(title=subtitle, content=image, size_hint=(1, .8))
         popup.open()
 
-    
+    def get_contact(self, contact):
+        self.check_heath(4)
+        print(contact)
+        pattern = re.compile(r"^\+?[0-9]{10,15}$")
+        
+        if(pattern.match(contact)):
+            insert_contact("user",contact)
+            print("Contact number:", contact)  # You can replace this with any action you want
+            toast("Contact number added successfully")
+            self.root.get_screen("editdetails").ids.econtact.text = ''
+        else:
+            toast("Invalid contact number")
+    def send_message(self,contact_info):
+        phoneNumber = contact_info["phone"]
+        name=contact_info["name"]
+        message = "Hi "+name+" I am in serious health issue please help me"
+        
+        print(contact_info)
+        pass
+    def check_heath(self,score):
+        print("Health checked")
+        # score = get_score()
+        print(score)
+        if(score == 0):
+            toast("You are healthy")
+        elif(score==1):
+            toast("Please take care of your health, You have mild health issues")
+        elif(score == 2):
+            toast("Please take care of your health, You have moderate health issues")
+        else:
+            contacts= fetch_contacts()
+            for contact in contacts:
+                self.send_message(contact)
+                
+        
+
+            
+
 
 if __name__ == "__main__":
     HelpDroid().run()
