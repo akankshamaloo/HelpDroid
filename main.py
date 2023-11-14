@@ -17,7 +17,7 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.image import Image as KivyImage
 from kivy.uix.scatter import Scatter
 from kivy.uix.behaviors import ButtonBehavior
-from kivymd.uix.button import MDIconButton
+from kivymd.uix.button import MDFlatButton
 from kivy.uix.label import Label
 from kivymd.uix.floatlayout import MDFloatLayout
 import json
@@ -47,6 +47,7 @@ class CustomTopAppBar(MDScreen):
 class ClickableImage(ButtonBehavior, FitImage):
     pass
 class HelpDroid(MDApp):
+    
     def build(self):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.theme_style = "Dark"

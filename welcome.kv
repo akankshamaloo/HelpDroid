@@ -51,9 +51,12 @@ MDScreen:
             text: 'Arduino'
             icon: 'heart-pulse'
             CustomTopAppBar:
-            MDLabel:
-                text: 'Arduino'
-                halign: 'center'
+            MDRaisedButton:
+                text: "Check Health!!"
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                md_bg_color: app.theme_cls.primary_color
+                on_release: app.check_heath()
+            
         MDBottomNavigationItem:
             name: 'notification'
             text: 'Notification'
