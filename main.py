@@ -284,7 +284,6 @@ class HelpDroid(MDApp):
         popup.open()
 
     def get_contact(self, contact):
-        self.check_heath(4)
         print(contact)
         email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")        
         if(email_pattern.match(contact)):
@@ -301,9 +300,35 @@ class HelpDroid(MDApp):
     def check_heath(self,score):
         print("Health checked")
         print("Health checked")
+        txt=""
+
+        score,p = get_score()
+        print(score)
+        if(score == 0):
+            toast("You are healthy")
+            txt="Condition: Normal"
+            
+        elif(score==1):
+            toast("Please take care of your health, You have mild health issues")
+            txt="Condition: Mild"
+        elif(score == 2):
+            toast("Please take care of your health, You have moderate health issues")
+            txt="Condition: Moderate"
+            
+        else:
+            txt="Condition: Severe"
+            details= user_details()
+            for contact in details.get("contacts", []):
+                if contact.get("email"):
+                    print(contact.get("email"))
+                    message="Your closed one  have a medical emergency please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))
+                    print(message)
+                    send_mail(contact.get("email"),message,"Emergency from HelpDroid")
+                    toast("Please take care of your health, You have severe health issues, Informed your contacts")
+        txt = txt + "\nPulse: "+str(p[0])+"\nOxygen Level: "+str(p[1])
         if not self.dialog:
             self.dialog = MDDialog(
-                text="Discard draft?",
+                text=txt,
                 buttons=[
                     MDFlatButton(
                         text="CANCEL",
@@ -314,23 +339,6 @@ class HelpDroid(MDApp):
                 ],
             )
         self.dialog.open()
-        # score = get_score()
-        print(score)
-        if(score == 0):
-            toast("You are healthy")
-        elif(score==1):
-            toast("Please take care of your health, You have mild health issues")
-        elif(score == 2):
-            toast("Please take care of your health, You have moderate health issues")
-        else:
-            deatails= user_details()
-            for contact in deatails.get("contacts", []):
-                if contact.get("email"):
-                    print(contact.get("email"))
-                    message="Your closed one  have a medical emergency please check .\nUser Details:\n Name:"+(deatails.get("name"))+"\n Mobile "+(deatails.get("mobile"))+"\n Email:"+(deatails.get("email"))
-                    print(message)
-                    send_mail(contact.get("email"),message,"Emergency from HelpDroid")
-                    toast("Please take care of your health, You have severe health issues, Informed your contacts")
 
 
 

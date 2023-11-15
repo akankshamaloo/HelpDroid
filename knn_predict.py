@@ -27,7 +27,7 @@ def get_score():
     # evaluate model 
     sc = model.predict(arr)[0]
     print(sc)
-    return sc
+    return sc,p
 
 
 # check results
