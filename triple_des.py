@@ -867,7 +867,7 @@ def encrypted(file_path):
 	#   data = b"Please encrypt my data"
 	#   k = des(b"DESCRYPT", CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=PAD_PKCS5)
 	d = k.encrypt(image)
-	print( "Encrypted: %r" % d)
+	#print( "Encrypted: %r" % d)
 	return d
 
 
