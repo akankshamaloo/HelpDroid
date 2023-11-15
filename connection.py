@@ -4,6 +4,7 @@ import os
 import json
 import tempfile
 from triple_des import decrypted, encrypted
+from kivymd.toast import toast
 # Replace with your MongoDB connection string
 mongo_uri = 'mongodb+srv://sonadas8april:riyadasdas@cluster0.x0jnn5h.mongodb.net/'
 
@@ -51,7 +52,6 @@ def loginotpcheck(email_input):
     query = {'email': email_input}
     matching_documents = collection.find(query)
     for document in matching_documents:
-        print(document)
         print("Login Successful")
         return True
     return False
@@ -124,7 +124,7 @@ def insert_contact(name='user', email1=None):
         return
 
     if email1 is None:
-        print("Email is required.")
+        toast("Email is required.")
         return
 
     contact_data = {"name": name, "email": email1}
@@ -136,7 +136,6 @@ def insert_contact(name='user', email1=None):
             {"$push": {"contacts": contact_data}},
             upsert=False
         )
-        
         if update_result.matched_count == 0:
             print("No user found with the provided email.")
             return False
@@ -146,7 +145,6 @@ def insert_contact(name='user', email1=None):
         else:
             print("No update was made, possibly because the contact already exists.")
             return False
-
     except Exception as e:
         print(f"Error: {e}")
         return False
@@ -192,3 +190,35 @@ def user_details():
     except Exception as e:
         print(f"Error: {e}")
         return []
+
+def insert_medication(med_name,med_time):
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    if med_name is None or med_time is None:
+        toast("Email is required.")
+        return
+
+    med_data = {"name": med_name, "time": med_time}
+
+    try:
+        # Update the existing user document to add the contact
+        update_result = collection.update_one(
+            {"email": email},
+            {"$push": {"medication": med_data}},
+            upsert=False
+        )
+        
+        
+        if update_result.modified_count > 0:
+            print("medication inserted successfully.")
+            return True
+        else:
+            print("No update was made, possibly because the contact already exists.")
+            return False
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return False

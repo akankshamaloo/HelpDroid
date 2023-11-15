@@ -164,7 +164,8 @@ class HelpDroid(MDApp):
         time_dialog = MDTimePicker()
         time_dialog.bind(time=self.get_time)
         time_dialog.open()
-        self.root.get_screen("editmed").ids.time_label.text = f"{time_dialog.hour}:{time_dialog.minute}"
+        #print(time_dialog.hour, time_dialog.minute)
+        
 
     def get_time(self, instance, time):
         '''
@@ -172,6 +173,11 @@ class HelpDroid(MDApp):
         :type instance: <kivymd.uix.picker.MDTimePicker object>
         :type time: <class 'datetime.time'>
         '''
+        formatted_hour = str(time.hour).zfill(2)
+        formatted_minute = str(time.minute).zfill(2)
+        formatted_time = f"{formatted_hour}:{formatted_minute}"
+
+        self.root.get_screen("editmed").ids.time_label.text = formatted_time
         return time
 
     def logout(self):
@@ -285,22 +291,21 @@ class HelpDroid(MDApp):
         popup = Popup(title=subtitle, content=image, size_hint=(1, .8))
         popup.open()
 
-    def get_contact(self, contact):
-        print(contact)
+    def get_contact(self,name,contact):
+        #print(name,contact)
         email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")        
         if(email_pattern.match(contact)):
-            if(insert_contact("user",contact)):
-                print("Contact number:", contact)  # You can replace this with any action you want
+            if(insert_contact(name,contact)):
+                #print("Contact number:", contact)  # You can replace this with any action you want
                 toast("Contact  added successfully")
-                self.root.get_screen("editdetails").ids.econtact.text = ''
+                self.root.get_screen("editcontacts").ids.econtact.text = ''
             else:
-                toast("Error occured while inserting")
+                print("Error occured while inserting")
         else:
             toast("Invalid email ")
 
     dialog = None
     def check_heath(self):
-        print("Health checked")
         print("Health checked")
         txt=""
         score,p = get_score()
@@ -319,13 +324,13 @@ class HelpDroid(MDApp):
             details= user_details()
             for contact in details.get("contacts", []):
                 if contact.get("email"):
-                    print(contact.get("email"))
+                    #print(contact.get("email"))
                     message="Your closed one  have a medical emergency please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))
-                    print(message)
+                    #print(message)
                     send_mail(contact.get("email"),message,"Emergency from HelpDroid")
                     toast("Please take care of your health, You have severe health issues, Informed your contacts")
         txt = txt + "\nPulse: "+str(p[0])+"\nOxygen Level: "+str(p[1])
-        print(txt)
+        #print(txt)
         self.dialog = None
         if not self.dialog:
             self.dialog = MDDialog(
@@ -341,6 +346,15 @@ class HelpDroid(MDApp):
             )
         self.dialog.open()
 
+    def get_medication(self, med_name):
+        med_time = self.root.get_screen("editmed").ids.time_label.text
+        #print(med_name,med_time)
+        if(insert_medication(med_name,med_time)):
+            print("Medication inserted successfully")
+            toast("Medication added successfully")
+            self.root.get_screen("editmed").ids.medname.text = ''
+            self.root.get_screen("editmed").ids.time_label.text = ''
+            
 
 
 if __name__ == "__main__":
