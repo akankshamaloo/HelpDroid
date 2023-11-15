@@ -51,6 +51,8 @@ class CustomTopAppBar(MDScreen):
     pass
 class ClickableImage(ButtonBehavior, FitImage):
     pass
+
+
 class HelpDroid(MDApp):
     
     def build(self):
@@ -297,24 +299,21 @@ class HelpDroid(MDApp):
             toast("Invalid email ")
 
     dialog = None
-    def check_heath(self,score):
+    def check_heath(self):
         print("Health checked")
         print("Health checked")
         txt=""
-
         score,p = get_score()
         print(score)
         if(score == 0):
             toast("You are healthy")
-            txt="Condition: Normal"
-            
+            txt="Condition: Normal"            
         elif(score==1):
             toast("Please take care of your health, You have mild health issues")
             txt="Condition: Mild"
         elif(score == 2):
             toast("Please take care of your health, You have moderate health issues")
             txt="Condition: Moderate"
-            
         else:
             txt="Condition: Severe"
             details= user_details()
@@ -326,6 +325,8 @@ class HelpDroid(MDApp):
                     send_mail(contact.get("email"),message,"Emergency from HelpDroid")
                     toast("Please take care of your health, You have severe health issues, Informed your contacts")
         txt = txt + "\nPulse: "+str(p[0])+"\nOxygen Level: "+str(p[1])
+        print(txt)
+        self.dialog = None
         if not self.dialog:
             self.dialog = MDDialog(
                 text=txt,
