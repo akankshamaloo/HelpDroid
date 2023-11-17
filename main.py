@@ -41,8 +41,9 @@ from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
-from jnius import autoclass
 from kivy.utils import platform
+from kivymd.uix.list import OneLineListItem
+from kivymd.uix.button import MDIconButton
 
 Window.size = (310, 580)
 
@@ -80,6 +81,7 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
         screen_manager.add_widget(Builder.load_file("editcontacts.kv"))
         screen_manager.add_widget(Builder.load_file("editmed.kv")) 
+        screen_manager.add_widget(Builder.load_file("deletemed.kv"))
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.accent_palette = "Gray"
@@ -367,6 +369,8 @@ class HelpDroid(MDApp):
             )
         self.dialog.open()
 
+
+
     def get_medication(self, med_name):
         med_time = self.root.get_screen("editmed").ids.time_label.text
         #print(med_name,med_time)
@@ -375,6 +379,27 @@ class HelpDroid(MDApp):
             toast("Medication added successfully")
             self.root.get_screen("editmed").ids.medname.text = ''
             self.root.get_screen("editmed").ids.time_label.text = ''
+
+
+
+
+
+
+    def remove_item(self, item):
+        my_screen = self.root.get_screen("deletemed")
+        my_screen.ids.md_list.remove_widget(item)
+
+    def delete_med(self):
+        my_screen = self.root.get_screen("deletemed")
+        for i in range(15):
+            item = OneLineListItem(text=f"One-line item {i}", _no_ripple_effect=True)
+            trash_icon = MDIconButton(
+                icon="trash-can",
+                pos_hint={"center_y": .5, "center_x": .9},
+                on_release=lambda instance, item=item: self.remove_item(item)
+            )
+            item.add_widget(trash_icon)
+            my_screen.ids.md_list.add_widget(item)
             
 
 

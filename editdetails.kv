@@ -38,7 +38,8 @@ MDScreen:
             ripple_behavior: "auto"
             on_release: 
                 root.manager.transition.direction="left"
-                root.manager.current="editmed"
+                root.manager.current="deletemed"
+                app.delete_med()
         MDRaisedButton:
             text: "Edit Contacts"
             size_hint: None, None
