@@ -41,7 +41,8 @@ from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
-
+from jnius import autoclass
+from kivy.utils import platform
 
 Window.size = (310, 580)
 
@@ -52,10 +53,20 @@ class CustomTopAppBar(MDScreen):
 class ClickableImage(ButtonBehavior, FitImage):
     pass
 
-
+class MyCompleteListener:
+    def onComplete(self, task):
+        if task.isSuccessful():
+            token = task.getResult()
+            print("Device Token:", token)
+        else:
+            print("Failed to get token")
 class HelpDroid(MDApp):
     
     def build(self):
+        
+        # FirebaseMessaging = autoclass('com.google.firebase.messaging.FirebaseMessaging')
+        # FirebaseMessaging.getInstance().getToken().addOnCompleteListener(MyCompleteListener())
+      
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.theme_style = "Dark"
         screen_manager=ScreenManager()
@@ -194,6 +205,16 @@ class HelpDroid(MDApp):
     def clear_session(self):
         if os.path.exists('session.json'):
             os.remove('session.json')
+
+    def on_start(self):
+        # Other initialization code
+        Clock.schedule_interval(self.refresh_data_from_mongodb, 10)  # Refresh every 10 seconds
+
+    def refresh_data_from_mongodb(self, dt):
+        # TODO: Fetch new data from MongoDB and update your UI components
+        # This is a placeholder function. You need to implement the actual data fetching
+        # and updating logic based on your application's requirements.
+        pass
 
     def on_start(self):
         self.file_manager = MDFileManager(
