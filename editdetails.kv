@@ -22,7 +22,7 @@ MDScreen:
             pos_hint: {'center_x': 0.5, 'center_y': 0.9}
         
         MDRaisedButton:
-            text: "Edit Medication"
+            text: "Add Medication"
             size_hint: None, None
             size: dp(150), dp(50)
             pos_hint: {'center_x': 0.5, 'center_y': 0.7}
@@ -31,10 +31,19 @@ MDScreen:
                 root.manager.transition.direction="left"
                 root.manager.current="editmed"
         MDRaisedButton:
-            text: "Edit Contacts"
+            text: "Delete Medication"
             size_hint: None, None
             size: dp(150), dp(50)
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            ripple_behavior: "auto"
+            on_release: 
+                root.manager.transition.direction="left"
+                root.manager.current="editmed"
+        MDRaisedButton:
+            text: "Edit Contacts"
+            size_hint: None, None
+            size: dp(150), dp(50)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
             ripple_behavior: "auto"
             on_release: 
                 root.manager.transition.direction="left"
