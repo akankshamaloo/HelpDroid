@@ -1,36 +1,62 @@
-from pymongo import MongoClient
-from firebase_admin import messaging, credentials, initialize_app
-import datetime
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
+import webbrowser
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
-# Firebase Admin Initialization
-cred = credentials.Certificate("helpdroid-fa971-firebase-adminsdk-bmofw-25ebeda380.json")
-initialize_app(cred)
+class CalendarApp(App):
+    def build(self):
+        layout = BoxLayout(orientation='vertical')
+        auth_button = Button(text='Authenticate with Google')
+        auth_button.bind(on_press=self.authenticate_google)
+        layout.add_widget(auth_button)
+        return layout
 
-# MongoDB Connection
-client = MongoClient("mongodb_connection_string")
-db = client.your_database_name
-meds_collection = db.medications
+    def authenticate_google(self, instance):
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'client_secret_151690723541-2o01nir9ojvqf60vq1si0e667f09dd22.apps.googleusercontent.com.json',  # Replace with the path to your credentials file
+            scopes=['https://www.googleapis.com/auth/calendar']
+        )
 
-def send_notification(device_token, message):
-    # Constructing the Firebase message
-    message = messaging.Message(
-        notification=messaging.Notification(
-            title='Medication Reminder',
-            body=message
-        ),
-        token=device_token,
-    )
-    # Sending the message
-    response = messaging.send(message)
-    print('Successfully sent message:', response)
+        # Run the local server to authenticate
+        flow.run_local_server(port=0)
 
-def check_and_notify():
-    # Current time in HH:MM format
-    current_time = datetime.datetime.now().strftime("%H:%M")
-    query = {"time": current_time}
-    for med in meds_collection.find(query):
-        message = f"It's time to take your {med['name']}"
-        send_notification(med['device_token'], message)
+        credentials = flow.credentials
+        service = build('calendar', 'v3', credentials=credentials)
+        # You can now use the 'service' object to make API calls
+        print('Authentication successful!')
 
-# Running the function
-check_and_notify()
+if __name__ == '__main__':
+    CalendarApp().run()
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
+import webbrowser
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+
+class CalendarApp(App):
+    def build(self):
+        layout = BoxLayout(orientation='vertical')
+        auth_button = Button(text='Authenticate with Google')
+        auth_button.bind(on_press=self.authenticate_google)
+        layout.add_widget(auth_button)
+        return layout
+
+    def authenticate_google(self, instance):
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'client_secret_151690723541-2o01nir9ojvqf60vq1si0e667f09dd22.apps.googleusercontent.com.json',  # Replace with the path to your credentials file
+            scopes=['https://www.googleapis.com/auth/calendar']
+        )
+
+        # Run the local server to authenticate
+        flow.run_local_server(port=0)
+
+        credentials = flow.credentials
+        service = build('calendar', 'v3', credentials=credentials)
+        # You can now use the 'service' object to make API calls
+        print('Authentication successful!')
+
+if __name__ == '__main__':
+    CalendarApp().run()
