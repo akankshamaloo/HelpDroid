@@ -1,12 +1,8 @@
 from kivy.config import Config
 Config.set('graphics', 'width', '310')
 Config.set('graphics', 'height', '580')
-from kivy.core.text import LabelBase
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import MDScreen
-from kivymd.uix.menu import MDDropdownMenu
-from kivy.properties import ObjectProperty
-from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.filemanager import MDFileManager
 from kivy.core.window import Window
 from kivy.metrics import dp
@@ -21,8 +17,6 @@ from kivy.uix.image import Image as KivyImage
 from kivy.uix.scatter import Scatter
 from kivy.uix.behaviors import ButtonBehavior
 from kivymd.uix.button import MDFlatButton
-from kivy.uix.label import Label
-from kivymd.uix.floatlayout import MDFloatLayout
 import json
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image as KivyImage
@@ -34,16 +28,17 @@ from otp_generate import *
 from connection import *
 from authentication import *
 from triple_des import *
-from kivy.core.image import Image as CoreImage
-from io import BytesIO
 from knn_predict import *
 from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
-from jnius import autoclass
 from kivy.utils import platform
 from notification import *
+
+from kivymd.uix.list import TwoLineAvatarIconListItem
+from kivymd.uix.list import IconRightWidget
+from kivymd.uix.list import IconLeftWidget
 
 Window.size = (310, 580)
 
@@ -81,6 +76,7 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
         screen_manager.add_widget(Builder.load_file("editcontacts.kv"))
         screen_manager.add_widget(Builder.load_file("editmed.kv")) 
+        screen_manager.add_widget(Builder.load_file("deletemed.kv"))
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.accent_palette = "Gray"
@@ -170,6 +166,7 @@ class HelpDroid(MDApp):
             print("otp wrong")
 
     def editdetails(self):
+        self.root.transition.direction="left"
         self.root.current="editdetails"
 
     def show_time_picker(self):
@@ -305,7 +302,8 @@ class HelpDroid(MDApp):
                             size_hint=(0.8, 0.8),
                         )
                     )
-                )    
+                )
+        self.root.transition.direction="left"
         self.root.current = "viewmed"
 
     def viewImage(self, path, subtitle):       
@@ -368,6 +366,8 @@ class HelpDroid(MDApp):
             )
         self.dialog.open()
 
+
+
     def get_medication(self, med_name):
         med_time = self.root.get_screen("editmed").ids.time_label.text
         #print(med_name,med_time)
@@ -376,6 +376,32 @@ class HelpDroid(MDApp):
             toast("Medication added successfully")
             self.root.get_screen("editmed").ids.medname.text = ''
             self.root.get_screen("editmed").ids.time_label.text = ''
+
+
+
+
+
+
+    def remove_item(self, instance):
+        my_screen = self.root.get_screen("deletemed")
+        my_screen.ids.md_list.remove_widget(instance.parent.parent)
+
+    def delete_med(self):
+        my_screen = self.root.get_screen("deletemed")
+        for i in range(15):
+            item = TwoLineAvatarIconListItem(
+                IconRightWidget(
+                    on_release=self.remove_item,
+                    icon="trash-can"
+                ),
+                IconLeftWidget(
+                    icon="medication-outline"
+                ),
+                text=f"One-line item {i}",
+                secondary_text="time"
+            )
+            my_screen.ids.md_list.add_widget(item)
+    
             
 
 
