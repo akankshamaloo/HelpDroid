@@ -378,10 +378,6 @@ class HelpDroid(MDApp):
             self.root.get_screen("editmed").ids.time_label.text = ''
 
 
-
-
-
-
     def remove_item(self, instance):
         my_screen = self.root.get_screen("deletemed")
         my_screen.ids.md_list.remove_widget(instance.parent.parent)
