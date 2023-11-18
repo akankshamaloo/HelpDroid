@@ -1,12 +1,8 @@
 from kivy.config import Config
 Config.set('graphics', 'width', '310')
 Config.set('graphics', 'height', '580')
-from kivy.core.text import LabelBase
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import MDScreen
-from kivymd.uix.menu import MDDropdownMenu
-from kivy.properties import ObjectProperty
-from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.filemanager import MDFileManager
 from kivy.core.window import Window
 from kivy.metrics import dp
@@ -21,8 +17,6 @@ from kivy.uix.image import Image as KivyImage
 from kivy.uix.scatter import Scatter
 from kivy.uix.behaviors import ButtonBehavior
 from kivymd.uix.button import MDFlatButton
-from kivy.uix.label import Label
-from kivymd.uix.floatlayout import MDFloatLayout
 import json
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image as KivyImage
@@ -34,16 +28,16 @@ from otp_generate import *
 from connection import *
 from authentication import *
 from triple_des import *
-from kivy.core.image import Image as CoreImage
-from io import BytesIO
 from knn_predict import *
 from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
 from kivy.utils import platform
-from kivymd.uix.list import OneLineListItem
-from kivymd.uix.button import MDIconButton
+
+from kivymd.uix.list import TwoLineAvatarIconListItem
+from kivymd.uix.list import IconRightWidget
+from kivymd.uix.list import IconLeftWidget
 
 Window.size = (310, 580)
 
@@ -171,6 +165,7 @@ class HelpDroid(MDApp):
             print("otp wrong")
 
     def editdetails(self):
+        self.root.transition.direction="left"
         self.root.current="editdetails"
 
     def show_time_picker(self):
@@ -306,7 +301,8 @@ class HelpDroid(MDApp):
                             size_hint=(0.8, 0.8),
                         )
                     )
-                )    
+                )
+        self.root.transition.direction="left"
         self.root.current = "viewmed"
 
     def viewImage(self, path, subtitle):       
@@ -385,21 +381,26 @@ class HelpDroid(MDApp):
 
 
 
-    def remove_item(self, item):
+    def remove_item(self, instance):
         my_screen = self.root.get_screen("deletemed")
-        my_screen.ids.md_list.remove_widget(item)
+        my_screen.ids.md_list.remove_widget(instance.parent.parent)
 
     def delete_med(self):
         my_screen = self.root.get_screen("deletemed")
         for i in range(15):
-            item = OneLineListItem(text=f"One-line item {i}", _no_ripple_effect=True)
-            trash_icon = MDIconButton(
-                icon="trash-can",
-                pos_hint={"center_y": .5, "center_x": .9},
-                on_release=lambda instance, item=item: self.remove_item(item)
+            item = TwoLineAvatarIconListItem(
+                IconRightWidget(
+                    on_release=self.remove_item,
+                    icon="trash-can"
+                ),
+                IconLeftWidget(
+                    icon="medication-outline"
+                ),
+                text=f"One-line item {i}",
+                secondary_text="time"
             )
-            item.add_widget(trash_icon)
             my_screen.ids.md_list.add_widget(item)
+    
             
 
 
