@@ -222,3 +222,41 @@ def insert_medication(med_name,med_time):
     except Exception as e:
         print(f"Error: {e}")
         return False
+def get_medications_details():
+    email = read_email_from_session()
+    # Replace with your collection name
+    user_data = collection.find_one({"email": email})
+    if user_data and "medication" in user_data:
+        return user_data["medication"]
+    return []
+def delete_medication(med_name,med_time):
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    if med_name is None or med_time is None:
+        toast("Email is required.")
+        return
+
+    med_data = {"name": med_name, "time": med_time}
+
+    try:
+        # Update the existing user document to add the contact
+        update_result = collection.update_one(
+            {"email": email},
+            {"$pull": {"medication": med_data}},
+            upsert=False
+        )
+        
+        
+        if update_result.modified_count > 0:
+            print("medication deleted successfully.")
+            return True
+        else:
+            print("No update was made, possibly because the contact already exists.")
+            return False
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
