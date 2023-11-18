@@ -244,6 +244,7 @@ class HelpDroid(MDApp):
 
 
     def emergency(self):
+
         self.dialog = None
         if not self.dialog:
             self.dialog = MDDialog(
@@ -258,6 +259,7 @@ class HelpDroid(MDApp):
                 ],
             )
         self.dialog.open()
+        self.check_heath()
 
 
     def uploadmed(self):
