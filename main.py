@@ -43,6 +43,7 @@ from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
 from jnius import autoclass
 from kivy.utils import platform
+from notification import *
 
 Window.size = (310, 580)
 
@@ -63,7 +64,7 @@ class MyCompleteListener:
 class HelpDroid(MDApp):
     
     def build(self):
-        
+        schedule_medication_notification('Medicine XYZ', '00:56')
         # FirebaseMessaging = autoclass('com.google.firebase.messaging.FirebaseMessaging')
         # FirebaseMessaging.getInstance().getToken().addOnCompleteListener(MyCompleteListener())
       
