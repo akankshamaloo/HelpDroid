@@ -1,6 +1,13 @@
 <CustomTopAppBar>:
+    MDFloatingActionButton:
+        id: emergency
+        icon: "heart-plus"
+        md_bg_color: (1, 0, 0, 1)
+        pos: 10, 10
+        elevation:0
+        on_release: app.emergency()
     MDTopAppBar:
-        title: "Welcome to Helpdroid"
+        title: "Helpdroid"
         elevation: 3
         pos_hint: {"top": 1}
         font_style: "H2"
@@ -17,6 +24,7 @@
     adaptive_height: True
 MDScreen:
     name: "welcome"
+    
     MDBottomNavigation:
         selected_color_background: app.theme_cls.accent_color
         text_color_active: app.theme_cls.primary_color

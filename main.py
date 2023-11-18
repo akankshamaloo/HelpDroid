@@ -34,7 +34,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
 from kivy.utils import platform
-
+from kivymd.uix.taptargetview import MDTapTargetView
 from kivymd.uix.list import TwoLineAvatarIconListItem
 from kivymd.uix.list import IconRightWidget
 from kivymd.uix.list import IconLeftWidget
@@ -239,6 +239,25 @@ class HelpDroid(MDApp):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager, select_path=self.select_path
         ) 
+
+
+
+    def emergency(self):
+        self.dialog = None
+        if not self.dialog:
+            self.dialog = MDDialog(
+                text="Emergency button pressed",
+                buttons=[
+                    MDFlatButton(
+                        text="OKAY",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog.dismiss(),
+                    ),
+                ],
+            )
+        self.dialog.open()
+
 
     def uploadmed(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
