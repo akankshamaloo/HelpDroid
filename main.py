@@ -385,10 +385,21 @@ class HelpDroid(MDApp):
     def remove_item(self, instance):
         my_screen = self.root.get_screen("deletemed")
         my_screen.ids.md_list.remove_widget(instance.parent.parent)
+        print(instance.parent.parent.text)
+        print(instance.parent.parent.secondary_text)
+        if(delete_medication(instance.parent.parent.text,instance.parent.parent.secondary_text)):
+            toast("Medication deleted successfully")
+        else:
+            toast("Error occured while deleting")
+
+
 
     def delete_med(self):
+        medications = get_medications_details()
         my_screen = self.root.get_screen("deletemed")
-        for i in range(15):
+        my_screen.ids.md_list.clear_widgets()
+
+        for med in medications:
             item = TwoLineAvatarIconListItem(
                 IconRightWidget(
                     on_release=self.remove_item,
@@ -397,11 +408,11 @@ class HelpDroid(MDApp):
                 IconLeftWidget(
                     icon="medication-outline"
                 ),
-                text=f"One-line item {i}",
-                secondary_text="time"
+                text=f"{med['name']}",
+                secondary_text=f"{med['time']}"
             )
             my_screen.ids.md_list.add_widget(item)
-    
+
             
 
 
