@@ -5,6 +5,7 @@ import json
 import tempfile
 from triple_des import decrypted, encrypted
 from kivymd.toast import toast
+from notification import *
 # Replace with your MongoDB connection string
 mongo_uri = 'mongodb+srv://sonadas8april:riyadasdas@cluster0.x0jnn5h.mongodb.net/'
 
@@ -214,6 +215,7 @@ def insert_medication(med_name,med_time):
         
         if update_result.modified_count > 0:
             print("medication inserted successfully.")
+            schedule_medication_notification(med_name, med_time)
             return True
         else:
             print("No update was made, possibly because the contact already exists.")
@@ -260,3 +262,8 @@ def delete_medication(med_name,med_time):
     except Exception as e:
         print(f"Error: {e}")
         return False
+def send_notification():
+    med_timings = get_medications_details()
+    for med_timing in med_timings:
+        schedule_medication_notification(med_timing["name"], med_timing["time"])
+   
