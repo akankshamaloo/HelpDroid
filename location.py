@@ -1,17 +1,47 @@
-from plyer import gps
+import geocoder
+from geopy.geocoders import Nominatim
+geolocator = Nominatim(user_agent="geoapiExercises")
 
-def get_location():
+def get_location_by_coordinates(lat, lon):
     try:
-        gps.configure(on_location=on_location, on_status=on_status)
-        gps.start(minTime=1000, minDistance=0)
+        location = geolocator.reverse((lat, lon))
+        return location.address
     except Exception as e:
-        print("An error occurred: " + str(e))
+        return str(e)
 
-def on_location(**kwargs):
-    print(f"Latitude: {kwargs['lat']}, Longitude: {kwargs['lon']}")
+# Example coordinates
 
-def on_status(stype, status):
-    print(f"Status: {stype}, {status}")
 
-# Call this function to start the GPS
-get_location()
+g = geocoder.ip('me')
+
+# Latitude and Longitude
+print(f"Latitude and Longitude: {g.latlng}")
+latitude = g.latlng[0]
+longitude = g.latlng[1]
+print(f"Latitude: {latitude}")
+print(f"Longitude: {longitude}")
+address = get_location_by_coordinates(latitude, longitude)
+print(f"Address: {address}")
+# City
+if g.city:
+    print(f"City: {g.city}")
+else:
+    print("City information not available")
+
+# Country
+if g.country:
+    print(f"Country: {g.country}")
+else:
+    print("Country information not available")
+
+# State or Region
+if g.state:
+    print(f"State/Region: {g.state}")
+else:
+    print("State/Region information not available")
+
+# Complete Address (if available)
+if g.address:
+    print(f"Address: {g.address}")
+else:
+    print("Address information not available")
