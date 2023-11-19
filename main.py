@@ -108,8 +108,12 @@ class HelpDroid(MDApp):
         if(check):
             print("signed in successful")
             self.save_session(email)
+            self.root.get_screen("register").ids.Email.text = ''
+            self.root.get_screen("register").ids.password.text = ''
+            self.root.get_screen("register").ids.Name.text = ''
+            self.root.get_screen("register").ids.MobileNo.text = ''
+            self.root.get_screen("register").ids.OTP.text = ''
             self.root.current="welcome"
-            #new page call
         else:
             self.root.get_screen("register").ids.Email.text = ''
             self.root.get_screen("register").ids.password.text = ''
@@ -138,6 +142,8 @@ class HelpDroid(MDApp):
             
             if(loginotpcheck(email)):
                 self.save_session(email)
+                self.root.get_screen("loginwithotp").ids.Email.text = ''
+                self.root.get_screen("loginwithotp").ids.OTP.text = ''
                 self.root.current="welcome"
                 print("Login Successful")
 
@@ -157,6 +163,9 @@ class HelpDroid(MDApp):
         if(otp==self.temp_otp):
             hash = sha256(password+""+email)    
             update(email,hash)
+            self.root.get_screen("forgot_password").ids.OTP.text = ''
+            self.root.get_screen("forgot_password").ids.password.text = ''
+            self.root.get_screen("forgot_password").ids.Email.text = ''
             self.root.current="login"
             print('Password changed')
         else:
@@ -175,7 +184,6 @@ class HelpDroid(MDApp):
         time_dialog.open()
         #print(time_dialog.hour, time_dialog.minute)
         
-
     def get_time(self, instance, time):
         '''
         The method returns the set time.
@@ -194,7 +202,7 @@ class HelpDroid(MDApp):
         self.clear_session()
 
     def save_session(self, email):
-        session_data = {
+        session_data ={
             'user_email': email
         }
         with open('session.json', 'w') as session_file:
@@ -232,7 +240,6 @@ class HelpDroid(MDApp):
                 else:
                     self.root.current = "login"
         
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Window.bind(on_keyboard=self.events)
@@ -241,14 +248,11 @@ class HelpDroid(MDApp):
             exit_manager=self.exit_manager, select_path=self.select_path
         ) 
 
-
-
-    def emergency(self):
-
+    def emergency(self):        
         self.dialog = None
         if not self.dialog:
             self.dialog = MDDialog(
-                text="Emergency button pressed",
+                text="Emergency button pressed\nInformed your contacts",
                 buttons=[
                     MDFlatButton(
                         text="OKAY",
@@ -259,8 +263,14 @@ class HelpDroid(MDApp):
                 ],
             )
         self.dialog.open()
-        self.check_heath()
-
+        details= user_details()
+        for contact in details.get("contacts", []):
+            if contact.get("email"):
+                #print(contact.get("email"))
+                message="Your closed one have pressed medical emergency button please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))
+                #print(message)
+                send_mail(contact.get("email"),message,"Emergency from HelpDroid")
+                #toast("Please take care of your health, You have severe health issues, Informed your contacts")
 
     def uploadmed(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
@@ -284,7 +294,6 @@ class HelpDroid(MDApp):
             # File is too large, notify the user
             toast("Choose a file within 300 KB")
 
-
     def exit_manager(self, *args):
         '''Called when the user reaches the root of the directory tree.'''
         self.manager_open = False
@@ -302,8 +311,7 @@ class HelpDroid(MDApp):
         if(self.flag==0):
             self.flag=1
             image_data = fetch_and_decrypt_prescription_images()
-            my_screen = self.root.get_screen("viewmed")
-            
+            my_screen = self.root.get_screen("viewmed")           
             for data in image_data:
                 my_screen.ids.swiperitems.add_widget(
                     MDSwiperItem(
@@ -344,7 +352,6 @@ class HelpDroid(MDApp):
                 print("Error occured while inserting")
         else:
             toast("Invalid email ")
-
     dialog = None
     def check_heath(self):
         print("Health checked")
@@ -387,8 +394,6 @@ class HelpDroid(MDApp):
             )
         self.dialog.open()
 
-
-
     def get_medication(self, med_name):
         med_time = self.root.get_screen("editmed").ids.time_label.text
         #print(med_name,med_time)
@@ -397,7 +402,6 @@ class HelpDroid(MDApp):
             toast("Medication added successfully")
             self.root.get_screen("editmed").ids.medname.text = ''
             self.root.get_screen("editmed").ids.time_label.text = ''
-
 
     def remove_item(self, instance):
         my_screen = self.root.get_screen("deletemed")
@@ -409,13 +413,10 @@ class HelpDroid(MDApp):
         else:
             toast("Error occured while deleting")
 
-
-
     def delete_med(self):
         medications = get_medications_details()
         my_screen = self.root.get_screen("deletemed")
         my_screen.ids.md_list.clear_widgets()
-
         for med in medications:
             item = TwoLineAvatarIconListItem(
                 IconRightWidget(
@@ -431,7 +432,6 @@ class HelpDroid(MDApp):
             my_screen.ids.md_list.add_widget(item)
 
             
-
 
 if __name__ == "__main__":
     HelpDroid().run()
