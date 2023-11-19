@@ -1,7 +1,7 @@
 import smtplib
 import ssl
 from email.message import EmailMessage
-
+from kivymd.toast import toast
 # Email configuration
 email_sender = 'teamhelpdroid@gmail.com'  # Your email address
 email_password = 'ayeadmrgdjpkxhod'  # Your email password
@@ -15,7 +15,10 @@ def generate_otp():
     return str(random.randint(1000, 9999))
 
 def send_mail(email_receiver,message,sub="Your OTP for HelpDroid"):
-    # Set the subject and body of the email
+    # Set the subject and body of the 
+    if(not email_receiver):
+        toast("Email not found")
+        return
     subject = sub
     body = message
 

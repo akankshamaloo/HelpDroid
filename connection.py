@@ -263,7 +263,10 @@ def delete_medication(med_name,med_time):
         print(f"Error: {e}")
         return False
 def send_notification():
-    med_timings = get_medications_details()
-    for med_timing in med_timings:
-        schedule_medication_notification(med_timing["name"], med_timing["time"])
+    try:
+        med_timings = get_medications_details()
+        for med_timing in med_timings:
+            schedule_medication_notification(med_timing["name"], med_timing["time"])
+    except Exception as e:
+        print("Error")
    

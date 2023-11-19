@@ -59,8 +59,8 @@ class MyCompleteListener:
 class HelpDroid(MDApp):
     
     def build(self):
-                
-        send_notification()
+        if os.path.exists("session.json"):
+            send_notification()
         # FirebaseMessaging = autoclass('com.google.firebase.messaging.FirebaseMessaging')
         # FirebaseMessaging.getInstance().getToken().addOnCompleteListener(MyCompleteListener())
       
@@ -105,23 +105,33 @@ class HelpDroid(MDApp):
         name = self.root.get_screen("register").ids.Name.text
         mobile = self.root.get_screen("register").ids.MobileNo.text
         otp = self.root.get_screen("register").ids.OTP.text
-        check=reg_auth(email,otp,password,name,mobile,self.temp_otp)
-        if(check):
-            print("signed in successful")
-            self.save_session(email)
-            self.root.get_screen("register").ids.Email.text = ''
-            self.root.get_screen("register").ids.password.text = ''
-            self.root.get_screen("register").ids.Name.text = ''
-            self.root.get_screen("register").ids.MobileNo.text = ''
-            self.root.get_screen("register").ids.OTP.text = ''
-            self.root.current="welcome"
+        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")   
+        password_pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
+        mobile_pattern = re.compile(r'^[789]\d{9}$')
+
+        if(not email_pattern.match(email)):
+            toast("Invalid email")
+        elif(not password_pattern.match(password)):
+            toast("Password should have at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character")
+        elif(not name):
+            toast("Please enter name")
+        elif(not mobile_pattern.match(mobile)):
+            toast("Invalid mobile number")
         else:
-            self.root.get_screen("register").ids.Email.text = ''
-            self.root.get_screen("register").ids.password.text = ''
-            self.root.get_screen("register").ids.Name.text = ''
-            self.root.get_screen("register").ids.MobileNo.text = ''
-            self.root.get_screen("register").ids.OTP.text = ''
-            print("signed in unsuccessful")
+            check=reg_auth(email,otp,password,name,mobile,self.temp_otp)
+            if(check):
+                print("signed in successful")
+                self.save_session(email)
+                self.root.get_screen("register").ids.Email.text = ''
+                self.root.get_screen("register").ids.password.text = ''
+                self.root.get_screen("register").ids.Name.text = ''
+                self.root.get_screen("register").ids.MobileNo.text = ''
+                self.root.get_screen("register").ids.OTP.text = ''
+                self.root.current="welcome"
+            else:
+                self.root.get_screen("register").ids.OTP.text = ''
+                print("signed in unsuccessful")
+     
 
     def login(self):
         email = self.root.get_screen("login").ids.username.text

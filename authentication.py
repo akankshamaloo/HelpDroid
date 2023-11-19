@@ -1,5 +1,6 @@
 from connection import *
 from sha256 import *
+from kivymd.toast import toast
 def reg_auth(email_input,otp_input,password_input,name_input,mobile_input,otp_sent):
     print(otp_input,"..",otp_sent)
     if(otp_input==otp_sent):
@@ -7,6 +8,7 @@ def reg_auth(email_input,otp_input,password_input,name_input,mobile_input,otp_se
         insert_data(email_input,password_input,mobile_input,name_input)
         return True
     else:
+        toast("OTP not matched")
         return False
 def login_auth(email_input, password_input=None):
     # If a password is provided, hash it together with the email to check for a match.
