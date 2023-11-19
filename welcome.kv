@@ -16,7 +16,7 @@
         right_action_items:
             [
             ["logout", lambda x: app.logout(), "", "Logout"],
-            ["account-edit-outline", lambda x: app.editdetails(), "" , "Edit details"],
+            ["bell", lambda x: app.notification(), "" , "Notifications"],
             ]
 <MenuHeader>
     spacing: "12dp"
@@ -26,8 +26,10 @@ MDScreen:
     name: "welcome"
     
     MDBottomNavigation:
+        id: bottom_navigation
         selected_color_background: app.theme_cls.accent_color
         text_color_active: app.theme_cls.primary_color
+        
 
         MDBottomNavigationItem:
             name: 'doctor'
@@ -66,12 +68,35 @@ MDScreen:
                 on_release: app.check_heath()
             
         MDBottomNavigationItem:
-            name: 'notification'
-            text: 'Notification'
-            icon: 'bell'
+            name: 'Editdetails'
+            text: 'Edit Details'
+            icon: 'account-edit'
             CustomTopAppBar:
-            MDLabel:
-                text: 'Notification'
-                halign: 'center'
-        
-    
+            MDRaisedButton:
+                text: "Add Medication"
+                size_hint: None, None
+                size: dp(150), dp(50)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+                ripple_behavior: "auto"
+                on_release: 
+                    root.manager.transition.direction="left"
+                    root.manager.current="editmed"
+            MDRaisedButton:
+                text: "Delete Medication"
+                size_hint: None, None
+                size: dp(150), dp(50)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                ripple_behavior: "auto"
+                on_release: 
+                    root.manager.transition.direction="left"
+                    root.manager.current="deletemed"
+                    app.delete_med()
+            MDRaisedButton:
+                text: "Edit Contacts"
+                size_hint: None, None
+                size: dp(150), dp(50)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+                ripple_behavior: "auto"
+                on_release: 
+                    root.manager.transition.direction="left"
+                    root.manager.current="editcontacts"

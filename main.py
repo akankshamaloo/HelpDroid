@@ -73,7 +73,7 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("registration_pg.kv"))
         screen_manager.add_widget(Builder.load_file("forgot_pg.kv"))
         screen_manager.add_widget(Builder.load_file("welcome.kv"))
-        screen_manager.add_widget(Builder.load_file("editdetails.kv"))
+        screen_manager.add_widget(Builder.load_file("notification.kv"))
         screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
         screen_manager.add_widget(Builder.load_file("editcontacts.kv"))
         screen_manager.add_widget(Builder.load_file("editmed.kv")) 
@@ -185,9 +185,9 @@ class HelpDroid(MDApp):
             self.root.get_screen("forgot_password").ids.Email.text = ''
             print("otp wrong")
 
-    def editdetails(self):
+    def notification(self):
         self.root.transition.direction="left"
-        self.root.current="editdetails"
+        self.root.current="notification"
 
     def show_time_picker(self):
         time_dialog = MDTimePicker()
@@ -223,9 +223,6 @@ class HelpDroid(MDApp):
         if os.path.exists('session.json'):
             os.remove('session.json')
 
-    def on_start(self):
-        # Other initialization code
-        Clock.schedule_interval(self.refresh_data_from_mongodb, 10)  # Refresh every 10 seconds
 
     def refresh_data_from_mongodb(self, dt):
         # TODO: Fetch new data from MongoDB and update your UI components
@@ -234,6 +231,7 @@ class HelpDroid(MDApp):
         pass
 
     def on_start(self):
+        Clock.schedule_interval(self.refresh_data_from_mongodb, 10)
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path
