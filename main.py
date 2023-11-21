@@ -487,6 +487,13 @@ class HelpDroid(MDApp):
     def on_touch_down(self, touch):
         self.reset_inactivity_timer()
         return super().on_touch_down(touch)
+    def on_touch_up(self, touch):
+        self.reset_inactivity_timer()
+        return super().on_touch_up(touch)
+    def on_touch_move(self, touch):
+        self.reset_inactivity_timer()
+        return super().on_touch_move(touch)
+    
 
 if __name__ == "__main__":
     HelpDroid().run()
