@@ -10,13 +10,18 @@ def arduino():
     # Sending data
     arduino.write(b'Hello Arduino!')
     cnt=0
+    loop=0
     # Receiving data
-    while True:
-        if arduino.in_waiting > 0:
+    while loop<50000:
+        loop+=1
+        print("in arduino loop")
+        if arduino.in_waiting > 0 and cnt<10000:
+            print("in arduino loop if")
             cnt+=1
             data = arduino.readline().decode().strip()
-            #print("Data received:",data)
+            print("Data received:",data)
             if( data[0]=='H'):
+                #print("Data received:",data)
                 #print("Data needed:",data)
                 p=data.split('/')
                 #print(p)
@@ -43,4 +48,6 @@ def arduino():
                     return p
                 #print(p)break
                 #np.array(x1, dtype=np.float64)
-                
+    print("loop ended")
+    return [0,0]            
+#arduino()

@@ -28,7 +28,7 @@ from otp_generate import *
 from connection import *
 from authentication import *
 from triple_des import *
-from knn_predict import *
+from knn_prediction import *
 from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
@@ -387,6 +387,7 @@ class HelpDroid(MDApp):
                     send_mail(contact.get("email"),message,"Emergency from HelpDroid")
                     toast("Please take care of your health, You have severe health issues, Informed your contacts")
         txt = txt + "\nPulse: "+str(p[0])+"\nOxygen Level: "+str(p[1])
+
         #print(txt)
         self.dialog = None
         if not self.dialog:
