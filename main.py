@@ -69,6 +69,7 @@ class HelpDroid(MDApp):
     def build(self):
         if os.path.exists("session.json"):
             send_notification()
+            self.bind_global_events()
             self.reset_inactivity_timer()
             
             
@@ -222,6 +223,14 @@ class HelpDroid(MDApp):
     def logout(self):
         self.root.current="login"
         self.clear_session()
+        self.cancel_inactivity_timer()
+        self.unbind_global_events()
+        
+    def cancel_inactivity_timer(self):
+        if self.inactivity_timer is not None:
+            self.inactivity_timer.cancel()
+        self.inactivity_timer = None
+
     def logoutAgain(self, instance):
         print("Logging out.")
         instance.parent.parent.dismiss()
@@ -231,7 +240,9 @@ class HelpDroid(MDApp):
         session_data ={
             'user_email': email
         }
+        self.bind_global_events()
         self.reset_inactivity_timer()
+
         with open('session.json', 'w') as session_file:
             json.dump(session_data, session_file)
 
@@ -254,6 +265,7 @@ class HelpDroid(MDApp):
         )
         Window.bind(on_keyboard=self.events)  
         self.load_session()
+        
        
 
     def load_session(self):
@@ -484,15 +496,20 @@ class HelpDroid(MDApp):
         ],
     )
         self.dialog.open()
-    def on_touch_down(self, touch):
+    def bind_global_events(self):
+        Window.bind(on_motion=self.on_any_event)
+        Window.bind(on_key_down=self.on_any_event)
+        Window.bind(on_key_up=self.on_any_event)
+        Window.bind(mouse_pos=self.on_any_event)
+
+    def unbind_global_events(self):
+        Window.unbind(on_key_down=self.on_any_event)
+        Window.unbind(on_key_up=self.on_any_event)
+        Window.unbind(on_motion=self.on_any_event)
+        Window.unbind(mouse_pos=self.on_any_event)
+
+    def on_any_event(self, *args):
         self.reset_inactivity_timer()
-        return super().on_touch_down(touch)
-    def on_touch_up(self, touch):
-        self.reset_inactivity_timer()
-        return super().on_touch_up(touch)
-    def on_touch_move(self, touch):
-        self.reset_inactivity_timer()
-        return super().on_touch_move(touch)
     
 
 if __name__ == "__main__":
