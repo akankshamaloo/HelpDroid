@@ -69,6 +69,9 @@ class HelpDroid(MDApp):
     def build(self):
         if os.path.exists("session.json"):
             send_notification()
+            self.reset_inactivity_timer()
+            
+            
         # FirebaseMessaging = autoclass('com.google.firebase.messaging.FirebaseMessaging')
         # FirebaseMessaging.getInstance().getToken().addOnCompleteListener(MyCompleteListener())
       
@@ -228,6 +231,7 @@ class HelpDroid(MDApp):
         session_data ={
             'user_email': email
         }
+        self.reset_inactivity_timer()
         with open('session.json', 'w') as session_file:
             json.dump(session_data, session_file)
 
@@ -250,8 +254,7 @@ class HelpDroid(MDApp):
         )
         Window.bind(on_keyboard=self.events)  
         self.load_session()
-        self.reset_inactivity_timer()
-
+       
 
     def load_session(self):
         if os.path.exists('session.json'):
@@ -272,6 +275,7 @@ class HelpDroid(MDApp):
         ) 
         self.inactivity_timer = None
         self.timeout_duration =10
+       
     
 
     def emergency(self):        
