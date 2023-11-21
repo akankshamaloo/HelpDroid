@@ -271,7 +271,7 @@ class HelpDroid(MDApp):
             exit_manager=self.exit_manager, select_path=self.select_path
         ) 
         self.inactivity_timer = None
-        self.timeout_duration = 300 
+        self.timeout_duration =10
     
 
     def emergency(self):        
@@ -466,18 +466,19 @@ class HelpDroid(MDApp):
         self.show_timeout_modal()
 
     def show_timeout_modal(self):
-        modal = ModalView(size_hint=(0.75, 0.5))
-        layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
-
-        label = Label(text='Session timed out. Please log in again.', size_hint=(1, 0.8))
-        okay_button = Button(text='Okay', size_hint=(1, 0.2), on_release=self.logoutAgain)
-
-        layout.add_widget(label)
-        layout.add_widget(okay_button)
-
-        modal.add_widget(layout)
-        modal.open()
-
+        self.dialog = MDDialog(
+        title="Session Timeout",
+        text="Please Login again to continue.",
+        buttons=[
+            MDFlatButton(
+            text="Close",
+            theme_text_color="Custom",
+            text_color=self.theme_cls.primary_color,
+            on_release=lambda x: (self.logout(), self.dialog.dismiss()),
+)         
+        ],
+    )
+        self.dialog.open()
     def on_touch_down(self, touch):
         self.reset_inactivity_timer()
         return super().on_touch_down(touch)
