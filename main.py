@@ -39,8 +39,15 @@ from kivy.utils import platform
 from kivymd.uix.list import TwoLineAvatarIconListItem
 from kivymd.uix.list import IconRightWidget
 from kivymd.uix.list import IconLeftWidget
+from kivy.clock import Clock
+from kivy.uix.modalview import ModalView
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 
 Window.size = (310, 580)
+
+
 
 class ClickableImage(ButtonBehavior, FitImage):
     pass
@@ -56,6 +63,7 @@ class MyCompleteListener:
             print("Device Token:", token)
         else:
             print("Failed to get token")
+
 class HelpDroid(MDApp):
     
     def build(self):
@@ -211,6 +219,10 @@ class HelpDroid(MDApp):
     def logout(self):
         self.root.current="login"
         self.clear_session()
+    def logoutAgain(self, instance):
+        print("Logging out.")
+        instance.parent.parent.dismiss()
+        self.logout()
 
     def save_session(self, email):
         session_data ={
@@ -229,7 +241,7 @@ class HelpDroid(MDApp):
         # This is a placeholder function. You need to implement the actual data fetching
         # and updating logic based on your application's requirements.
         pass
-
+    
     def on_start(self):
         Clock.schedule_interval(self.refresh_data_from_mongodb, 10)
         self.file_manager = MDFileManager(
@@ -238,6 +250,8 @@ class HelpDroid(MDApp):
         )
         Window.bind(on_keyboard=self.events)  
         self.load_session()
+        self.reset_inactivity_timer()
+
 
     def load_session(self):
         if os.path.exists('session.json'):
@@ -256,6 +270,9 @@ class HelpDroid(MDApp):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager, select_path=self.select_path
         ) 
+        self.inactivity_timer = None
+        self.timeout_duration =10
+    
 
     def emergency(self):        
         self.dialog = None
@@ -441,7 +458,31 @@ class HelpDroid(MDApp):
             )
             my_screen.ids.md_list.add_widget(item)
 
-            
+    def reset_inactivity_timer(self):
+        if self.inactivity_timer is not None:
+            self.inactivity_timer.cancel()
+        self.inactivity_timer = Clock.schedule_once(self.on_timeout, self.timeout_duration)
+
+    def on_timeout(self, *args):
+        self.show_timeout_modal()
+
+    def show_timeout_modal(self):
+        self.dialog = MDDialog(
+        title="Session Timeout",
+        text="Please Login again to continue.",
+        buttons=[
+            MDFlatButton(
+            text="Close",
+            theme_text_color="Custom",
+            text_color=self.theme_cls.primary_color,
+            on_release=lambda x: (self.logout(), self.dialog.dismiss()),
+)         
+        ],
+    )
+        self.dialog.open()
+    def on_touch_down(self, touch):
+        self.reset_inactivity_timer()
+        return super().on_touch_down(touch)
 
 if __name__ == "__main__":
     HelpDroid().run()
