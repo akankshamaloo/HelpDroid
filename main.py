@@ -225,7 +225,7 @@ class HelpDroid(MDApp):
         self.clear_session()
         self.cancel_inactivity_timer()
         self.unbind_global_events()
-        
+
     def cancel_inactivity_timer(self):
         if self.inactivity_timer is not None:
             self.inactivity_timer.cancel()
@@ -286,7 +286,7 @@ class HelpDroid(MDApp):
             exit_manager=self.exit_manager, select_path=self.select_path
         ) 
         self.inactivity_timer = None
-        self.timeout_duration =10
+        self.timeout_duration =300
        
     
 
