@@ -28,7 +28,7 @@ from otp_generate import *
 from connection import *
 from authentication import *
 from triple_des import *
-from knn_prediction import *
+from prediction import *
 from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
