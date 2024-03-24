@@ -121,7 +121,7 @@ class HelpDroid(MDApp):
         email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")   
         password_pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
         mobile_pattern = re.compile(r'^[789]\d{9}$')
-
+        print(self.role)
         if(not email_pattern.match(email)):
             toast("Invalid email")
         elif(not password_pattern.match(password)):
@@ -131,7 +131,7 @@ class HelpDroid(MDApp):
         elif(not mobile_pattern.match(mobile)):
             toast("Invalid mobile number")
         else:
-            check=reg_auth(email,otp,password,name,mobile,self.temp_otp)
+            check=reg_auth(email,otp,password,name,mobile,self.temp_otp,self.role)
             if(check):
                 print("signed in successful")
                 self.save_session(email)
@@ -140,14 +140,20 @@ class HelpDroid(MDApp):
                 self.root.get_screen("register").ids.Name.text = ''
                 self.root.get_screen("register").ids.MobileNo.text = ''
                 self.root.get_screen("register").ids.OTP.text = ''
-                self.root.current="welcome"
+                if(self.role):
+                    self.root.current="welcomeD"
+                else:
+                    self.root.current="welcome"
             else:
                 self.root.get_screen("register").ids.OTP.text = ''
                 print("signed in unsuccessful")
+    role= False
     def checkdoctor(self, switch_instance):
         if switch_instance.active:
+            self.role = True
             print('The checkbox is active')
         else:
+            self.role=False
             print('The checkbox is inactive')
 
     def login(self):

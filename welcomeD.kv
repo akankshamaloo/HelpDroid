@@ -1,11 +1,4 @@
 <CustomTopAppBar>:
-    MDFloatingActionButton:
-        id: emergency
-        icon: "heart-plus"
-        md_bg_color: (1, 0, 0, 1)
-        pos: 10, 10
-        elevation:0
-        on_release: app.emergency()
     MDTopAppBar:
         id: topbar
         title: "Helpdroid"
@@ -24,7 +17,7 @@
     padding: "4dp"
     adaptive_height: True
 MDScreen:
-    name: "welcome"
+    name: "welcomeD"
     
     MDBottomNavigation:
         id: bottom_navigation
@@ -33,8 +26,8 @@ MDScreen:
         
 
         MDBottomNavigationItem:
-            name: 'doctor'
-            text: 'Doctor'
+            name: 'patient'
+            text: '{Patient}'
             icon: 'doctor'
             CustomTopAppBar:
             MDRaisedButton:
@@ -47,37 +40,10 @@ MDScreen:
                 text: "Patient List"
                 pos_hint: {"center_x": 0.5, "center_y": .4}
                 on_release: app.viewmed()
-             
-
-        MDBottomNavigationItem:
-            name: 'medication'
-            text: 'Medical Data'
-            icon: 'medication'
-            CustomTopAppBar:
-            MDRaisedButton:
-                text: "Upload Prescription"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                md_bg_color: app.theme_cls.primary_color
-                on_release: app.uploadmed()
-            MDRaisedButton:
-                id: button
-                text: "View Uploaded Prescription"
-                pos_hint: {"center_x": 0.5, "center_y": .4}
-                on_release: app.viewmed()
-        MDBottomNavigationItem:
-            name: 'arduino'
-            text: 'Sense'
-            icon: 'heart-pulse'
-            CustomTopAppBar:
-            MDRaisedButton:
-                text: "Check Health!!"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                md_bg_color: app.theme_cls.primary_color
-                on_release: app.check_heath()
             
         MDBottomNavigationItem:
-            name: 'Editdetails'
-            text: 'Edit Details'
+            name: 'Appointments'
+            text: 'Appointments'
             icon: 'account-edit'
             CustomTopAppBar:
             MDRaisedButton:
