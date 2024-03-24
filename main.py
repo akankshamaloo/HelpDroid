@@ -144,7 +144,11 @@ class HelpDroid(MDApp):
             else:
                 self.root.get_screen("register").ids.OTP.text = ''
                 print("signed in unsuccessful")
-     
+    def checkdoctor(self, switch_instance):
+        if switch_instance.active:
+            print('The checkbox is active')
+        else:
+            print('The checkbox is inactive')
 
     def login(self):
         email = self.root.get_screen("login").ids.username.text
