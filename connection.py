@@ -20,14 +20,14 @@ collection = db['User']
 
 # Insert a document into the collection
 
-def insert_data(email,password,mobile,name):
+def insert_data(email,password,mobile,name,role):
     # data = {'email': email, 'password': password,'mobile':mobile, 'name': name}
     # collection.insert_one(data)
     try:
         
         hash = sha256.sha256(password+""+email)
         
-        data = {'email': email, 'password': hash,'mobile':mobile, 'name': name}
+        data = {'email': email, 'password': hash,'mobile':mobile, 'name': name, 'role':role}
         collection.insert_one(data)
         print("Inserted")
     except Exception as e:

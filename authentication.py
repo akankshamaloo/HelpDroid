@@ -1,11 +1,11 @@
 from connection import *
 from sha256 import *
 from kivymd.toast import toast
-def reg_auth(email_input,otp_input,password_input,name_input,mobile_input,otp_sent):
+def reg_auth(email_input,otp_input,password_input,name_input,mobile_input,otp_sent,role):
     print(otp_input,"..",otp_sent)
     if(otp_input==otp_sent):
        
-        insert_data(email_input,password_input,mobile_input,name_input)
+        insert_data(email_input,password_input,mobile_input,name_input,role)
         return True
     else:
         toast("OTP not matched")

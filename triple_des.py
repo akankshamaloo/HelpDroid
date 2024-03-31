@@ -1,29 +1,4 @@
-#############################################################################
-# 				Documentation				    #
-#############################################################################
 
-# Author:   Todd Whiteman
-# Date:     16th March, 2009
-# Verion:   2.0.0
-# License:  Public Domain - free to do as you wish
-# Homepage: http://twhiteman.netfirms.com/des.html
-#
-# This is a pure python implementation of the DES encryption algorithm.
-# It's pure python to avoid portability issues, since most DES 
-# implementations are programmed in C (for performance reasons).
-#
-# Triple DES class is also implemented, utilising the DES base. Triple DES
-# is either DES-EDE3 with a 24 byte key, or DES-EDE2 with a 16 byte key.
-#
-# See the README.txt that should come with this python module for the
-# implementation methods used.
-#
-# Thanks to:
-#  * David Broadwell for ideas, comments and suggestions.
-#  * Mario Wolff for pointing out and debugging some triple des CBC errors.
-#  * Santiago Palladino for providing the PKCS5 padding technique.
-#  * Shaya for correcting the PAD_PKCS5 triple des CBC errors.
-#
 """A pure python implementation of the DES and TRIPLE DES encryption algorithms.
 
 Class initialization
