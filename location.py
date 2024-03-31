@@ -1,57 +1,24 @@
-import geocoder
 import requests
-import json
-from geopy.geocoders import Nominatim
-geolocator = Nominatim(user_agent="geoapiExercises")
 
-def get_location_by_coordinates(lat, lon):
-    print(lat," ", lon)
-    try:
-        location = geolocator.reverse((lat, lon))
-        return location.address
-    except Exception as e:
-        return str(e)
+def get_location(ip_address):
+    api_key = 'f93522e04e1ba3db108fee7552d4843352a9536215451b6a42e67b40'  # Replace with your actual API key from ipdata.co
+    url = f'https://api.ipdata.co/{ip_address}?api-key={api_key}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(response.json())
+        data = response.json()
+        return {
+            'country_name': data.get('country_name'),
+            'region': data.get('region'),
+            'city': data.get('city'),
+            'latitude': data.get('latitude'),
+            'longitude': data.get('longitude')
+        }
+    else:
+        print( "Failed to retrieve data")
+        return None
 
-# Example coordinates
 
 
+    
 
-
-send_url = "http://api.ipstack.com/check?access_key=f97bdfdeb683f7b248409e58b68c97d0"
-geo_req = requests.get(send_url)
-geo_json = json.loads(geo_req.text)
-latitude = geo_json['latitude']
-longitude = geo_json['longitude']
-city = geo_json['city']
-
-# # Latitude and Longitude
-# print(f"Latitude and Longitude: {g.latlng}")
-# latitude = g.latlng[0]
-# longitude = g.latlng[1]
-print(f"Latitude: {latitude} Longitude: {longitude}")
-address = get_location_by_coordinates(latitude, longitude)
-print(f"Address: {address}")
-# # City
-# 22.51787658144267, 88.41656619016217
-# if g.city:
-#     print(f"City: {g.city}")
-# else:
-#     print("City information not available")
-
-# # Country
-# if g.country:
-#     print(f"Country: {g.country}")
-# else:
-#     print("Country information not available")
-
-# # State or Region
-# if g.state:
-#     print(f"State/Region: {g.state}")
-# else:
-#     print("State/Region information not available")
-
-# # Complete Address (if available)
-# if g.address:
-#     print(f"Address: {g.address}")
-# else:
-#     print("Address information not available")

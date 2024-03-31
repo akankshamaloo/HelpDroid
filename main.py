@@ -34,8 +34,6 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
 from kivy.clock import Clock
 from kivy.utils import platform
-
-
 from kivymd.uix.list import TwoLineAvatarIconListItem
 from kivymd.uix.list import IconRightWidget
 from kivymd.uix.list import IconLeftWidget
@@ -44,7 +42,8 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-
+from sms import *
+from location import *
 Window.size = (310, 580)
 
 
@@ -120,7 +119,7 @@ class HelpDroid(MDApp):
         otp = self.root.get_screen("register").ids.OTP.text
         email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")   
         password_pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
-        mobile_pattern = re.compile(r'^[789]\d{9}$')
+        mobile_pattern = re.compile(r'^[6789]\d{9}$')
 
         if(not email_pattern.match(email)):
             toast("Invalid email")
@@ -308,12 +307,16 @@ class HelpDroid(MDApp):
         self.dialog.open()
         details= user_details()
         for contact in details.get("contacts", []):
+            response=get_location('223.191.62.144')
+            message="Your closed one have severe health issues please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))+ "\nLocation: "+"\nCountry: "+response.get("country_name")+"\nState: "+response.get("region")+"\nCity: "+response.get("city")+"\nLatitude: "+str(response.get("latitude"))+"\nLongitude: "+str(response.get("longitude"))    
             if contact.get("email"):
                 #print(contact.get("email"))
-                message="Your closed one have pressed medical emergency button please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))
                 #print(message)
                 send_mail(contact.get("email"),message,"Emergency from HelpDroid")
-                #toast("Please take care of your health, You have severe health issues, Informed your contacts")
+                toast("Please take care of your health, You have severe health issues, Informed your contacts")
+            if contact.get("mobile"):
+                #send_sms(contact.get("mobile"),message)
+                toast("Please take care of your health, You have severe health issues, Informed your contacts")
 
     def uploadmed(self):
         self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
@@ -383,16 +386,21 @@ class HelpDroid(MDApp):
         popup = Popup(title=subtitle, content=image, size_hint=(1, .8))
         popup.open()
 
-    def get_contact(self,name,contact):
+    def get_contact(self,name,contact,phn):
         #print(name,contact)
-        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")        
-        if(email_pattern.match(contact)):
-            if(insert_contact(name,contact)):
-                #print("Contact number:", contact)  # You can replace this with any action you want
-                toast("Contact  added successfully")
-                self.root.get_screen("editcontacts").ids.econtact.text = ''
+        email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")  
+        mobile_pattern = re.compile(r'^[6789]\d{9}$')     
+        print(contact,phn) 
+        if(email_pattern.match(contact)) :
+            if(mobile_pattern.match(phn)):
+                if(insert_contact(name,contact,phn)):
+                    #print("Contact number:", contact)  # You can replace this with any action you want
+                    toast("Contact  added successfully")
+                    self.root.get_screen("editcontacts").ids.econtact.text = ''
+                else:
+                    print("Error occured while inserting")
             else:
-                print("Error occured while inserting")
+                toast("Invalid mobile number")
         else:
             toast("Invalid email ")
     dialog = None
@@ -414,12 +422,16 @@ class HelpDroid(MDApp):
             txt="Condition: Severe"
             details= user_details()
             for contact in details.get("contacts", []):
+                response=get_location('223.191.62.144')
+                message="Your closed one have severe health issues please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))+ "\nLocation: "+"\nCountry: "+response.get("country_name")+"\nState: "+response.get("region")+"\nCity: "+response.get("city")+"\nLatitude: "+str(response.get("latitude"))+"\nLongitude: "+str(response.get("longitude"))    
                 if contact.get("email"):
-                    #print(contact.get("email"))
-                    message="Your closed one  have a medical emergency please check .\nUser Details:\n Name:"+(details.get("name"))+"\n Mobile "+(details.get("mobile"))+"\n Email:"+(details.get("email"))
+                    #print(contact.get("email"))                    
                     #print(message)
                     send_mail(contact.get("email"),message,"Emergency from HelpDroid")
                     toast("Please take care of your health, You have severe health issues, Informed your contacts")
+                if contact.get("mobile"):
+                    #send_sms(contact.get("mobile"),message)
+                    toast("Please take care of your health, You have severe health issues, Informed your contacts") 
         txt = txt + "\nPulse: "+str(p[0])+"\nOxygen Level: "+str(p[1])
 
         #print(txt)

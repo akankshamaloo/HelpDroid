@@ -118,7 +118,7 @@ def read_email_from_session():
         session_data = json.load(file)
         return session_data.get('user_email', None)
 
-def insert_contact(name='user', email1=None):
+def insert_contact(name='user', email1=None, mobile=None):
     email = read_email_from_session()
     if not email:
         print("No email found in session.")
@@ -127,10 +127,13 @@ def insert_contact(name='user', email1=None):
     if email1 is None:
         toast("Email is required.")
         return
-
-    contact_data = {"name": name, "email": email1}
+    if mobile is None:
+        toast("Mobile is required.")
+        return
+    contact_data = {"name": name, "email": email1, "mobile": mobile}
 
     try:
+        print(contact_data)
         # Update the existing user document to add the contact
         update_result = collection.update_one(
             {"email": email},
