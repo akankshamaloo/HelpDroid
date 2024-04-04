@@ -21,6 +21,11 @@ def login_auth(email_input, password_input=None):
 
     for document in matching_documents:
         print(document)
-        return True
-    return False
+        role=(document['role'])
+        if(role):
+            return "Doctor"
+        else:
+            return "Patient"
+
+    return None
 

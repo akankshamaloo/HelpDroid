@@ -54,8 +54,13 @@ def loginotpcheck(email_input):
     matching_documents = collection.find(query)
     for document in matching_documents:
         print("Login Successful")
-        return True
-    return False
+        role=(document['role'])
+        if(role):
+            return "Doctor"
+        else:
+            return "Patient"
+
+    return None
 
 
 def append_encrypted_image_to_prescription(path):

@@ -132,7 +132,7 @@ class HelpDroid(MDApp):
         else:
             check=reg_auth(email,otp,password,name,mobile,self.temp_otp,self.role)
             if(check):
-                print("signed in successful")
+                
                 self.save_session(email)
                 self.root.get_screen("register").ids.Email.text = ''
                 self.root.get_screen("register").ids.password.text = ''
@@ -141,8 +141,10 @@ class HelpDroid(MDApp):
                 self.root.get_screen("register").ids.OTP.text = ''
                 if(self.role):
                     self.root.current="welcomeD"
+                    print("signed in doctor successful")
                 else:
                     self.root.current="welcome"
+                    print("signed in patient successful")
             else:
                 self.root.get_screen("register").ids.OTP.text = ''
                 print("signed in unsuccessful")
@@ -158,13 +160,19 @@ class HelpDroid(MDApp):
     def login(self):
         email = self.root.get_screen("login").ids.username.text
         password = self.root.get_screen("login").ids.password.text
-        if(login_auth(email,password)):
+        check=login_auth(email,password)
+        if(check !=None):
             print("Login Successful")
             #session management
             self.save_session(email)
             self.root.get_screen("login").ids.username.text = ''
             self.root.get_screen("login").ids.password.text = ''
-            self.root.current="welcome"
+            if(check =="Doctor"):
+                self.root.current="welcomeD"
+                print("Login doctor Successful")
+            else:    
+                self.root.current="welcome"
+                print("Login patient Successful")
         else:
             print("Login declined")
 
@@ -172,13 +180,17 @@ class HelpDroid(MDApp):
         email = self.root.get_screen("loginwithotp").ids.Email.text
         otp = self.root.get_screen("loginwithotp").ids.OTP.text
         if(otp==self.temp_otp):
-            
-            if(loginotpcheck(email)):
+            check = loginotpcheck(email)
+            if(check != None):
                 self.save_session(email)
                 self.root.get_screen("loginwithotp").ids.Email.text = ''
                 self.root.get_screen("loginwithotp").ids.OTP.text = ''
-                self.root.current="welcome"
-                print("Login Successful")
+                if(check =="Doctor"):
+                    self.root.current="welcomeD"
+                    print("Login doctor Successful")
+                else:
+                    self.root.current="welcome"
+                    print("Login patient Successful")
 
             else:
                 self.root.get_screen("loginwithotp").ids.Email.text = ''

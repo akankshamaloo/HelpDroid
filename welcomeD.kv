@@ -47,7 +47,7 @@ MDScreen:
             icon: 'account-edit'
             CustomTopAppBar:
             MDRaisedButton:
-                text: "Add Medication"
+                text: "Add Appointments"
                 size_hint: None, None
                 size: dp(150), dp(50)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.7}
@@ -56,7 +56,7 @@ MDScreen:
                     root.manager.transition.direction="left"
                     root.manager.current="editmed"
             MDRaisedButton:
-                text: "Delete Medication"
+                text: "Delete Appointments"
                 size_hint: None, None
                 size: dp(150), dp(50)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -64,9 +64,9 @@ MDScreen:
                 on_release: 
                     root.manager.transition.direction="left"
                     root.manager.current="deletemed"
-                    app.delete_med()
+                    app.delete_appoint()
             MDRaisedButton:
-                text: "Edit Contacts"
+                text: "View "
                 size_hint: None, None
                 size: dp(150), dp(50)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.3}
