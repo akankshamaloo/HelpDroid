@@ -32,6 +32,7 @@ from prediction import *
 from otp_generate import *
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.pickers import MDTimePicker
+from kivymd.uix.pickers import MDDatePicker
 from kivy.clock import Clock
 from kivy.utils import platform
 from kivymd.uix.list import TwoLineAvatarIconListItem
@@ -89,6 +90,7 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("viewmed_pg.kv"))
         screen_manager.add_widget(Builder.load_file("editcontacts.kv"))
         screen_manager.add_widget(Builder.load_file("editmed.kv")) 
+        screen_manager.add_widget(Builder.load_file("editapt.kv"))
         screen_manager.add_widget(Builder.load_file("deletemed.kv"))
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Blue"
@@ -149,6 +151,7 @@ class HelpDroid(MDApp):
                 self.root.get_screen("register").ids.OTP.text = ''
                 print("signed in unsuccessful")
     role= False
+    
     def checkdoctor(self, switch_instance):
         if switch_instance.active:
             self.role = True
@@ -240,7 +243,33 @@ class HelpDroid(MDApp):
         formatted_time = f"{formatted_hour}:{formatted_minute}"
 
         self.root.get_screen("editmed").ids.time_label.text = formatted_time
+        print(time)
         return time
+    
+    def on_save(self, instance, value, date_range):
+        '''
+        Events called when the "OK" dialog box button is clicked.
+
+        :type instance: <kivymd.uix.picker.MDDatePicker object>;
+        :param value: selected date;
+        :type value: <class 'datetime.date'>;
+        :param date_range: list of 'datetime.date' objects in the selected range;
+        :type date_range: <class 'list'>;
+        '''
+        # Convert the selected date to a string in the format you desire
+        formatted_date = value.strftime("%Y-%m-%d")  # Example format: YYYY-MM-DD
+
+        # Update the text of the date_label MDTextField with the selected date
+        self.root.get_screen("editapt").ids.date_label.text = formatted_date
+
+    def on_cancel(self, instance, value):
+        '''Events called when the "CANCEL" dialog box button is clicked.'''
+
+    def show_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
+
 
     def logout(self):
         self.root.current="login"
