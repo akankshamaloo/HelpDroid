@@ -34,12 +34,12 @@ MDScreen:
                 text: "Upcoming Appointments"
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 md_bg_color: app.theme_cls.primary_color
-                on_release: app.uploadmed()
+                on_release: 
             MDRaisedButton:
                 id: button
                 text: "Patient List"
                 pos_hint: {"center_x": 0.5, "center_y": .4}
-                on_release: app.viewmed()
+                on_release: 
             
         MDBottomNavigationItem:
             name: 'Appointments'
@@ -50,27 +50,19 @@ MDScreen:
                 text: "Add Appointments"
                 size_hint: None, None
                 size: dp(150), dp(50)
-                pos_hint: {'center_x': 0.5, 'center_y': 0.7}
-                ripple_behavior: "auto"
-                on_release: 
-                    root.manager.transition.direction="left"
-                    root.manager.current="editmed"
-            MDRaisedButton:
-                text: "Delete Appointments"
-                size_hint: None, None
-                size: dp(150), dp(50)
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 ripple_behavior: "auto"
                 on_release: 
                     root.manager.transition.direction="left"
-                    root.manager.current="deletemed"
-                    app.delete_appoint()
+                    root.manager.current="editapt"
             MDRaisedButton:
-                text: "View "
+                text: "Manage Appointments"
                 size_hint: None, None
                 size: dp(150), dp(50)
-                pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+                pos_hint: {'center_x': 0.5, 'center_y': 0.4}
                 ripple_behavior: "auto"
                 on_release: 
                     root.manager.transition.direction="left"
-                    root.manager.current="editcontacts"
+                    root.manager.current="deleteapt"
+                    app.delete_apt()
+            

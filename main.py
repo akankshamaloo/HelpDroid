@@ -92,6 +92,7 @@ class HelpDroid(MDApp):
         screen_manager.add_widget(Builder.load_file("editmed.kv")) 
         screen_manager.add_widget(Builder.load_file("editapt.kv"))
         screen_manager.add_widget(Builder.load_file("deletemed.kv"))
+        screen_manager.add_widget(Builder.load_file("deleteapt.kv"))
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Blue"
         self.theme_cls.accent_palette = "Gray"
@@ -243,7 +244,8 @@ class HelpDroid(MDApp):
         formatted_time = f"{formatted_hour}:{formatted_minute}"
 
         self.root.get_screen("editmed").ids.time_label.text = formatted_time
-        print(time)
+        self.root.get_screen("editapt").ids.time_label.text = formatted_time
+        #print(time)
         return time
     
     def on_save(self, instance, value, date_range):
@@ -501,6 +503,46 @@ class HelpDroid(MDApp):
             )
         self.dialog.open()
 
+    def get_appointment(self, p_name):
+        a_time = self.root.get_screen("editapt").ids.time_label.text
+        a_date=self.root.get_screen("editapt").ids.date_label.text
+        #print(med_name,med_time)
+        if(insert_appointment(p_name,a_time,a_date)):
+            print("appointment inserted successfully")
+            toast("Appointment added successfully")
+            self.root.get_screen("editapt").ids.pname.text = ''
+            self.root.get_screen("editapt").ids.time_label.text = ''
+            self.root.get_screen("editapt").ids.date_label.text = ''
+    
+    def remove_apt(self, instance):
+        my_screen = self.root.get_screen("deleteapt")
+
+        my_screen.ids.patient_list.remove_widget(instance.parent.parent)
+        print(instance.parent.parent.text)
+        print(instance.parent.parent.secondary_text)
+        if(delete_appointment(instance.parent.parent.text,instance.parent.parent.secondary_text)):
+            toast("Appointment deleted successfully")
+        else:
+            toast("Error occured while deleting")
+
+    def delete_apt(self):
+        appointments = get_appointment_details()
+        my_screen = self.root.get_screen("deleteapt")
+        my_screen.ids.patient_list.clear_widgets()
+        for apt in appointments:
+            item = TwoLineAvatarIconListItem(
+                IconRightWidget(
+                    on_release=self.remove_apt,
+                    icon="trash-can"
+                ),
+                IconLeftWidget(
+                    icon="medication-outline"
+                ),
+                text=f"{apt['name']}",
+                secondary_text=f"{apt['time'],apt['date']}"
+            )
+            my_screen.ids.patient_list.add_widget(item)
+    
     def get_medication(self, med_name):
         med_time = self.root.get_screen("editmed").ids.time_label.text
         #print(med_name,med_time)

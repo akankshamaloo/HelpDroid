@@ -6,6 +6,8 @@ import tempfile
 from triple_des import decrypted, encrypted
 from kivymd.toast import toast
 from notification import *
+from datetime import datetime
+
 # Replace with your MongoDB connection string
 mongo_uri = 'mongodb+srv://sonadas8april:riyadasdas@cluster0.x0jnn5h.mongodb.net/'
 
@@ -200,6 +202,97 @@ def user_details():
         print(f"Error: {e}")
         return []
 
+
+def insert_appointment(p_name,a_time,a_date):
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    if p_name is None or a_time is None or a_date is None:
+        toast("Email is required.")
+        return
+
+    a_data = {"name": p_name, "time": a_time, "date": a_date}
+
+    try:
+        # Update the existing user document to add the contact
+        update_result = collection.update_one(
+            {"email": email},
+            {"$push": {"appointment": a_data}},
+            upsert=False
+        )
+        
+        
+        if update_result.modified_count > 0:
+            print("appointment inserted successfully.")
+            schedule_appointment_notification(p_name, a_time, a_date)
+            return True
+        else:
+            print("No update was made, possibly because the contact already exists.")
+            return False
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+def get_appointment_details():
+    email = read_email_from_session()
+    # Ensure your MongoDB connection/collection is correctly set up here
+    user_data = collection.find_one({"email": email})
+    
+    if user_data and "appointment" in user_data:
+        # Get current local system time
+        current_time = datetime.now()
+        
+        updated_appointments = []
+        for appointment in user_data["appointment"]:
+            # Combine date and time into a datetime object for local time
+            appointment_time = datetime.strptime(f"{appointment['date']} {appointment['time']}", "%Y-%m-%d %H:%M")
+            
+            if appointment_time >= current_time:
+                updated_appointments.append(appointment)
+        
+        # Update the database with the remaining (future) appointments
+        collection.update_one({"email": email}, {"$set": {"appointment": updated_appointments}})
+        
+        return updated_appointments
+    return []
+
+def delete_appointment(p_name,apt_detail):
+    email = read_email_from_session()
+    if not email:
+        print("No email found in session.")
+        return
+
+    if p_name is None or apt_detail is None:
+        toast("Email is required.")
+        return
+    formatdata=apt_detail.split("(")[1].split(')')[0].replace("'","")
+    time=formatdata.split(",")[0].strip()
+    date=formatdata.split(",")[1].strip()
+    apt_data = {"name": p_name, "time": time, "date": date}
+    print(apt_data)
+    try:
+        # Update the existing user document to add the contact
+        update_result = collection.update_one(
+            {"email": email},
+            {"$pull": {"appointment": apt_data}},
+            upsert=False
+        )
+        
+        
+        if update_result.modified_count > 0:
+            print("appointment deleted successfully.")
+            return True
+        else:
+            print("No update was made, possibly because the contact already exists.")
+            return False
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
 def insert_medication(med_name,med_time):
     email = read_email_from_session()
     if not email:
@@ -273,8 +366,11 @@ def delete_medication(med_name,med_time):
 def send_notification():
     try:
         med_timings = get_medications_details()
+        apt_timings = get_appointment_details()
         for med_timing in med_timings:
             schedule_medication_notification(med_timing["name"], med_timing["time"])
+        for apt_timing in apt_timings:
+            schedule_appointment_notification(apt_timing["name"], apt_timing["time"], apt_timing["date"])
     except Exception as e:
         print("Error")
    
